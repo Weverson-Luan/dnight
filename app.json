@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "DNIGHT",
+    "slug": "DNIGHT",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
