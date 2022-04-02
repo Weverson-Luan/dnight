@@ -3,7 +3,7 @@ import { Platform } from 'react-native'
 import { NetworkConsumer } from 'react-native-offline'
 import styled from 'styled-components'
 
-import i18n from '../i18n'
+// import i18n from '../i18n'
 import { Styles } from '../../commom/styles'
 
 const Banner = styled.View`
@@ -25,7 +25,7 @@ export const NetworkStatus = () => (
     {({ isConnected }) =>
       isConnected ? null : (
         <Banner>
-          <Status>{i18n.t('messages.networkOffline')}</Status>
+          <Status>{console.log('messages.networkOffline')}</Status>
         </Banner>
       )
     }
