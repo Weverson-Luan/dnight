@@ -14,13 +14,11 @@ import { Constants, Styles } from '../../commom'
 import { loginWithFacebook } from '../../api/socialLogin';
 
 import AwesomeAlert from '../../utils/AwesomeAlert'
-import AppState from '../../api/AppState';
 
 const Screen = styled.View`
   flex: 1;
   background-color: ${Styles.Color.SCREEN_BACKGROUND};
   padding-bottom: ${getBottomSpace()}px;
-  /* padding: ${getStatusBarHeight()}px 0 ${getBottomSpace()}px 0; */
 `
 
 const Header = styled.View`
