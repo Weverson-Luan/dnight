@@ -8,7 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import styled from 'styled-components/native'
 import analytics from '@react-native-firebase/analytics'
 import auth from '@react-native-firebase/auth'
-import i18n from '../../i18n'
+// import i18n from '../../i18n'
 
 
 //components
@@ -72,18 +72,18 @@ class LoginScreen extends Component {
     const { email, password } = this.state
 
     if (!email) {
-      this.showInputError('email', i18n.t('errors.empty.email'))
+      this.showInputError('email', console.log('errors.empty.email'))
     } else if (!validator.isEmail(email)) {
-      this.showInputError('email', i18n.t('errors.invalid.email'))
+      this.showInputError('email', console.log('errors.invalid.email'))
     } else if (!password) {
       this.showInputError(
         'password',
-        i18n.t('errors.empty.password'),
+        console.log('errors.empty.password'),
       )
     } else if (password.length < Constants.PASSWORD_MIN_LENGTH) {
       this.showInputError(
         'password',
-        i18n.t('errors.invalid.smallPassword'),
+        console.log('errors.invalid.smallPassword'),
       )
     } else {
       this.firebaseAuth(email, password)
@@ -154,7 +154,7 @@ class LoginScreen extends Component {
                 variant={'none'}
                 value={this.state.email}
                 keyboardType='email-address'
-                placeholder={i18n.t('placeholders.email')}
+                placeholder={console.log('placeholders.email')}
                 returnKeyType='next'
                 autoCapitalize='none'
                 blurOnSubmit={false}
@@ -188,9 +188,9 @@ class LoginScreen extends Component {
                 variant={'none'}
                 value={this.state.password}
                 secureTextEntry={!this.state.showPassword}
-                placeholder={`${i18n.t('placeholders.password')}*`}
+                placeholder={`${console.log('placeholders.password')}*`}
                 returnKeyType='done'
-                returnKeyLabel={i18n.t('buttons.login')}
+                returnKeyLabel={console.log('buttons.login')}
                 onChangeText={text => this.onChangeText(text, 'password')}
                 placeholderTextColor='#FFF'
                 InputLeftElement={
@@ -217,7 +217,7 @@ class LoginScreen extends Component {
             <InputError error={errors.password} />
 
             <PrimaryButton 
-              title={i18n.t('buttons.login').toUpperCase()}
+              title={console.log('buttons.login').toUpperCase()}
               onPress={this.onSubmit}
               color={'white'}
               size={'lg'}
@@ -233,7 +233,7 @@ class LoginScreen extends Component {
                     color: '#FFF',
                   }}
                 >
-                  {i18n.t('buttons.forgotPassword')}
+                  {console.log('buttons.forgotPassword')}
                 </Text>
               </TouchableOpacity>
 
@@ -244,7 +244,7 @@ class LoginScreen extends Component {
                     color: '#FFF',
                   }}
                 >
-                  {i18n.t('buttons.signUpNow.firstMessage')}
+                  {console.log('buttons.signUpNow.firstMessage')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -252,7 +252,7 @@ class LoginScreen extends Component {
 
           {<ContainerSocial style={{ marginTop: 20 }}>
             <Text style={{ fontSize: Styles.FontSize.MEDIUM, color: '#FFF', marginBottom: 10 }}>
-              {i18n.t('labels.loginWith')}
+              {console.log('labels.loginWith')}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
