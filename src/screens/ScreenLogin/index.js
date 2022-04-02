@@ -1,171 +1,144 @@
-import React, { Component } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper'
-import { FormControl, Stack, Input } from 'native-base'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import validator from 'validator'
-import Spinner from 'react-native-loading-spinner-overlay'
-import styled from 'styled-components/native'
-import analytics from '@react-native-firebase/analytics'
-import auth from '@react-native-firebase/auth'
-// import i18n from '../../i18n'
+import React, { Component } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import {
+  getStatusBarHeight,
+  getBottomSpace,
+} from "react-native-iphone-x-helper";
+import { FormControl, Stack, Input } from "native-base";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import validator from "validator";
+import Spinner from "react-native-loading-spinner-overlay";
+import styled from "styled-components/native";
+
+import {PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
+import {InputError } from "../../components/Input/InputError/InputError";
 
 
-//components
-import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
-import { InputError } from '../../components/Input/InputError/InputError';
-import { Logo } from '../../components/Logo/Logo';
-import { NetworkStatus } from '../../components/NetworkStatus/NetworkStatus';
+import Constants  from "../../commom/constants";
+import Styles from "../../commom/styles";
+import {Logo}  from "../../components/Logo/Logo";
 
-import { Constants, Styles } from '../../commom'
-import { loginWithFacebook } from '../../api/socialLogin';
-
-import AwesomeAlert from '../../utils/AwesomeAlert'
 
 const Screen = styled.View`
   flex: 1;
   background-color: ${Styles.Color.SCREEN_BACKGROUND};
   padding-bottom: ${getBottomSpace()}px;
-`
+
+`;
 
 const Header = styled.View`
   justify-content: space-evenly;
   align-items: center;
   background-color: ${Styles.Color.PRIMARY};
   padding-bottom: 10px;
-`
+`;
 class LoginScreen extends Component {
   state = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     errors: {},
     spinner: false,
-  }
+  };
 
-  componentDidMount = () => {
-    analytics().logScreenView({
-      screen_name: 'LoginScreen',
-    });
-  }
 
   onChangeText = (text, input) => {
-    this.setState(previousState => ({
+    this.setState((previousState) => ({
       [input]: text,
-      errors: { ...previousState.errors, [input]: '' },
-    }))
-  }
+      errors: { ...previousState.errors, [input]: "" },
+    }));
+  };
 
   showInputError = (input, error, callback = null) => {
-    this.setState(previousState => ({
+    this.setState((previousState) => ({
       errors: {
         ...previousState.errors,
         [input]: error,
       },
-    }))
+    }));
 
     if (callback) {
-      callback()
+      callback();
     }
-  }
+  };
 
   onSubmit = () => {
-    const { email, password } = this.state
+    const { email, password } = this.state;
 
     if (!email) {
-      this.showInputError('email', console.log('errors.empty.email'))
+      this.showInputError("email", "errors.empty.email");
     } else if (!validator.isEmail(email)) {
-      this.showInputError('email', console.log('errors.invalid.email'))
+      this.showInputError("email", "errors.invalid.email");
     } else if (!password) {
-      this.showInputError(
-        'password',
-        console.log('errors.empty.password'),
-      )
+      this.showInputError("password", "errors.empty.password");
     } else if (password.length < Constants.PASSWORD_MIN_LENGTH) {
-      this.showInputError(
-        'password',
-        console.log('errors.invalid.smallPassword'),
-      )
+      this.showInputError("password", "errors.invalid.smallPassword");
     } else {
-      this.firebaseAuth(email, password)
+      // this.firebaseAuth(email, password);
     }
-  }
-
-  firebaseAuth = async (email, password) => {
-    this.setState({ spinner: true }) // Loading Overlap
-    if(!auth().currentUser) { 
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        var user = userCredential.user
-        this.setState({ spinner: false })
-        analytics().logEvent('loginWithFirebase')
-        this.props.navigation.navigate("TERMS_SCREEN", { login: true})
-      })
-      .catch(error => {
-        var errorMessage = error.message
-        this.setState({ spinner: false })
-        AwesomeAlert.show(errorMessage)
-      })
-    }
-  }
-
-
+  };
 
 
   loginFacebook = async () => {
-    this.setState({ spinner: true })
-  }
+    this.setState({ spinner: true });
+  };
 
   render() {
-    const { spinner, errors, showPassword } = this.state
+    const { spinner, errors, showPassword } = this.state;
     return (
       <Screen>
         <View
           style={{
             height: getStatusBarHeight(),
-            with: '100%',
+            with: "100%",
             backgroundColor: Styles.Color.PRIMARY,
           }}
         />
 
-        <NetworkStatus />
+        {/* 
+        <NetworkStatus /> */}
+
         <View
-          style={{ flex: 1, alignItems: 'center', backgroundColor: Styles.Color.PRIMARY }}
+          style={{
+            flex: 1,
+            alignItems: "center",
+            backgroundColor: Styles.Color.PRIMARY,
+          }}
           showsVerticalScrollIndicator={false}
         >
           <Header>
             <Logo />
+           
           </Header>
           <Spinner visible={spinner} />
 
-          <FormControl style={{ width: '80%', marginVertical: 120 }}>
+          <FormControl style={{ width: "80%", marginVertical: 120 }}>
             <Stack
               space={4}
               w="100%"
               alignItems="center"
               style={{
-                backgroundColor: '#465881',
+                backgroundColor: "#465881",
                 borderRadius: 10,
-                paddingHorizontal: 8
-              }}>
-
+                paddingHorizontal: 8,
+              }}
+            >
               <Input
-                style={{ color: '#fff', height: 50 }}
-                variant={'none'}
+                style={{ color: "#fff", height: 50 }}
+                variant={"none"}
                 value={this.state.email}
-                keyboardType='email-address'
-                placeholder={console.log('placeholders.email')}
-                returnKeyType='next'
-                autoCapitalize='none'
+                keyboardType="email-address"
+                placeholder={"placeholders.email"}
+                returnKeyType="next"
+                autoCapitalize="none"
                 blurOnSubmit={false}
-                onChangeText={text => this.onChangeText(text, 'email')}
-                placeholderTextColor='#FFF'
+                onChangeText={(text) => this.onChangeText(text, "email")}
+                placeholderTextColor="#FFF"
                 InputLeftElement={
                   <Icon
                     name="email-outline"
                     size={24}
                     style={{
-                      color: errors.email ? Styles.Color.ERROR : '#FFF',
+                      color: errors.email ? Styles.Color.ERROR : "#FFF",
                     }}
                   />
                 }
@@ -178,129 +151,156 @@ class LoginScreen extends Component {
               w="100%"
               alignItems="center"
               style={{
-                backgroundColor: '#465881',
+                backgroundColor: "#465881",
                 borderRadius: 10,
-                paddingHorizontal: 8
-              }}>
-
+                paddingHorizontal: 8,
+              }}
+            >
               <Input
-                style={{ color: '#fff', height: 50 }}
-                variant={'none'}
+                style={{ color: "#fff", height: 50 }}
+                variant={"none"}
                 value={this.state.password}
                 secureTextEntry={!this.state.showPassword}
-                placeholder={`${console.log('placeholders.password')}*`}
-                returnKeyType='done'
-                returnKeyLabel={console.log('buttons.login')}
-                onChangeText={text => this.onChangeText(text, 'password')}
-                placeholderTextColor='#FFF'
+                placeholder={"placeholders.password"}
+                returnKeyType="done"
+                returnKeyLabel={"buttons.login"}
+                onChangeText={(text) => this.onChangeText(text, "password")}
+                placeholderTextColor="#FFF"
                 InputLeftElement={
                   <Icon
                     name="lock-outline"
                     size={24}
                     style={{
-                      color: errors.password ? Styles.Color.ERROR : '#FFF',
+                      color: errors.password ? Styles.Color.ERROR : "#FFF",
                     }}
                   />
                 }
                 InputRightElement={
                   <Icon
-                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    name={showPassword ? "eye-off-outline" : "eye-outline"}
                     size={24}
-                    style={{ marginRight: 10, color: Styles.Color.TEXT_PRIMARY }}
-                    onPress={() => this.setState({ showPassword: !showPassword })}
+                    style={{
+                      marginRight: 10,
+                      color: Styles.Color.TEXT_PRIMARY,
+                    }}
+                    onPress={() =>
+                      this.setState({ showPassword: !showPassword })
+                    }
                   />
                 }
               />
-
             </Stack>
 
             <InputError error={errors.password} />
 
-            <PrimaryButton 
-              title={console.log('buttons.login').toUpperCase()}
+            <PrimaryButton
+              title={"buttons.login".toUpperCase()}
               onPress={this.onSubmit}
-              color={'white'}
-              size={'lg'}
+              color={"white"}
+              size={"lg"}
               radius={100}
               height={45}
             />
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate("RECOVER_PASSWORD_SCREEN") }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("RECOVER_PASSWORD_SCREEN");
+                }}
+              >
                 <Text
                   style={{
                     fontSize: Styles.FontSize.NORMAL,
-                    color: '#FFF',
+                    color: "#FFF",
                   }}
                 >
-                  {console.log('buttons.forgotPassword')}
+                  {"buttons.forgotPassword"}
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate("REGISTER_SCREEN", { updateMode: false }) }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("REGISTER_SCREEN", {
+                    updateMode: false,
+                  });
+                }}
+              >
                 <Text
                   style={{
                     fontSize: Styles.FontSize.NORMAL,
-                    color: '#FFF',
+                    color: "#FFF",
                   }}
                 >
-                  {console.log('buttons.signUpNow.firstMessage')}
+                  {"buttons.signUpNow.firstMessage"}
                 </Text>
               </TouchableOpacity>
             </View>
           </FormControl>
 
-          {<ContainerSocial style={{ marginTop: 20 }}>
-            <Text style={{ fontSize: Styles.FontSize.MEDIUM, color: '#FFF', marginBottom: 10 }}>
-              {console.log('labels.loginWith')}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity
-                style={{ marginHorizontal: 10 }}
-                onPress={() => { }}
-                activeOpacity={0.7}
+          {
+            <View style={{ marginTop: 20 }}>
+              <Text
+                style={{
+                  fontSize: Styles.FontSize.MEDIUM,
+                  color: "#FFF",
+                  marginBottom: 10,
+                }}
               >
-                <Image
-                  source={Icons.GOOGLE}
-                  style={{
-                    width: Styles.Metrics.WIDTH * 0.12,
-                    height: Styles.Metrics.WIDTH * 0.12,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginHorizontal: 10 }}
-                onPress={loginWithFacebook()}
-                activeOpacity={0.7}
-              >
-                <Image
-                  source={Icons.FACEBOOK}
-                  style={{
-                    width: Styles.Metrics.WIDTH * 0.12,
-                    height: Styles.Metrics.WIDTH * 0.12,
-                  }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginHorizontal: 10 }}
-                onPress={() => { }}
-                activeOpacity={0.7}
-              >
-                <Image
-                  source={Icons.TWITTER}
-                  style={{
-                    width: Styles.Metrics.WIDTH * 0.12,
-                    height: Styles.Metrics.WIDTH * 0.12,
-                  }}
-                />
-              </TouchableOpacity>
+                {"labels.loginWith"}
+              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{ marginHorizontal: 10 }}
+                  onPress={() => {}}
+                  activeOpacity={0.7}
+                >
+                  {/* <Image
+                    source={Icons.GOOGLE}
+                    style={{
+                      width: Styles.Metrics.WIDTH * 0.12,
+                      height: Styles.Metrics.WIDTH * 0.12,
+                    }}
+                  /> */}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginHorizontal: 10 }}
+                  onPress={alert("Fazer login facebokk")}
+                  activeOpacity={0.7}
+                >
+                  {/* <Image
+                    source={Icons.FACEBOOK}
+                    style={{
+                      width: Styles.Metrics.WIDTH * 0.12,
+                      height: Styles.Metrics.WIDTH * 0.12,
+                    }}
+                  /> */}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ marginHorizontal: 10 }}
+                  onPress={() => {}}
+                  activeOpacity={0.7}
+                >
+                  {/* <Image
+                    source={Icons.TWITTER}
+                    style={{
+                      width: Styles.Metrics.WIDTH * 0.12,
+                      height: Styles.Metrics.WIDTH * 0.12,
+                    }}
+                  /> */}
+                </TouchableOpacity>
+              </View>
             </View>
-                </ContainerSocial> }
+          }
         </View>
       </Screen>
-    )
+    );
   }
 }
 
-export default LoginScreen
-
+export default LoginScreen;
