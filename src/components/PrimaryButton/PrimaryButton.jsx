@@ -3,7 +3,6 @@ import { Text, StyleSheet, ViewPropTypes } from 'react-native'
 import { Button, Form } from 'native-base'
 import PropTypes from 'prop-types'
 
-import { Styles } from '../commom'
 
 export const PrimaryButton = ({ onPress, title, size, color, radius, variant, height}) => (
   <Button 
