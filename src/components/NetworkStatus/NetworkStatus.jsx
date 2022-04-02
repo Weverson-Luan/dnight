@@ -20,7 +20,7 @@ const Status = styled.Text`
   color: ${Styles.Color.TEXT_PRIMARY};
 `
 
-const NetworkStatus = () => (
+export const NetworkStatus = () => (
   <NetworkConsumer>
     {({ isConnected }) =>
       isConnected ? null : (
@@ -32,4 +32,3 @@ const NetworkStatus = () => (
   </NetworkConsumer>
 )
 
-export default NetworkStatus

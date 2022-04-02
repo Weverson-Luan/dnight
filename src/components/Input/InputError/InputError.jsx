@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const InputError = ({ error, style }) => <Text style={[styles.error, style]}>{error}</Text>
+export const InputError = ({ error, style }) => <Text style={[styles.error, style]}>{error}</Text>
 
 InputError.propTypes = {
   error: PropTypes.string,
@@ -23,4 +23,4 @@ InputError.defaultProps = {
   style: {},
 }
 
-export default InputError
+

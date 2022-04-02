@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 import { Styles } from '../commom'
 
-const PrimaryButton = ({ onPress, title, size, color, radius, variant, height}) => (
+export const PrimaryButton = ({ onPress, title, size, color, radius, variant, height}) => (
   <Button 
   style={{borderRadius: radius, height: height}} 
   variant={variant}
@@ -34,4 +34,3 @@ PrimaryButton.defaultProps = {
   height: 40
 }
 
-export default PrimaryButton

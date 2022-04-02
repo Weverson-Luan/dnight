@@ -9,7 +9,14 @@ import styled from 'styled-components/native'
 import analytics from '@react-native-firebase/analytics'
 import auth from '@react-native-firebase/auth'
 import i18n from '../../i18n'
-import { PrimaryButton, InputError, Logo, NetworkStatus } from '../../components'
+
+
+//components
+import { PrimaryButton } from '../../components/PrimaryButton/PrimaryButton';
+import { InputError } from '../../components/Input/InputError/InputError';
+import { Logo } from '../../components/Logo/Logo';
+import { NetworkStatus } from '../../components/NetworkStatus/NetworkStatus';
+
 import { Constants, Styles } from '../../commom'
 import { loginWithFacebook } from '../../api/socialLogin';
 
@@ -182,7 +189,6 @@ class LoginScreen extends Component {
                 value={this.state.password}
                 secureTextEntry={!this.state.showPassword}
                 placeholder={`${i18n.t('placeholders.password')}*`}
-                placeholder={i18n.t('placeholders.password')}
                 returnKeyType='done'
                 returnKeyLabel={i18n.t('buttons.login')}
                 onChangeText={text => this.onChangeText(text, 'password')}
