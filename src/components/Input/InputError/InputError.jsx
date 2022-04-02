@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, ViewPropTypes } from 'react-native'
 import PropTypes from 'prop-types'
-import { Styles } from '../../../commom';
+import  Styles from '../../../commom/styles';
 
 const styles = StyleSheet.create({
   error: {
