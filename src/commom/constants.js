@@ -1,5 +1,3 @@
-import i18n from '../i18n'
-
 
 export default {
   PASSWORD_MIN_LENGTH: 8,
@@ -8,19 +6,19 @@ export default {
   MASKED_BIRTHDATE_MAX_LENGTH: 10,
   GENDERS: [
     {
-      label: i18n.t('placeholders.genders.male'),
+      label: 'placeholders.genders.male',
       value: 'M',
     },
     {
-      label: i18n.t('placeholders.genders.female'),
+      label: 'placeholders.genders.female',
       value: 'F',
     },
     {
-      label: i18n.t('placeholders.genders.other'),
+      label: 'placeholders.genders.other',
       value: 'O',
     },
     {
-      label: i18n.t('placeholders.genders.unknown'),
+      label: 'placeholders.genders.unknown',
       value: 'U',
     },
   ],
