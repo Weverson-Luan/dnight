@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+// import React, { Component } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import {
   getStatusBarHeight,
@@ -10,28 +10,14 @@ import validator from "validator";
 import Spinner from "react-native-loading-spinner-overlay";
 import styled from "styled-components/native";
 
-import {PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
-import {InputError } from "../../components/Input/InputError/InputError";
+import { PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
+import { InputError } from "../../components/Input/InputError/InputError";
 
+import Constants from "../../commom/constants";
+import { Styles } from "../../commom/styles";
+import { Logo } from "../../components/Logo/Logo";
+import { Header } from "./styles";
 
-import Constants  from "../../commom/constants";
-import Styles from "../../commom/styles";
-import {Logo}  from "../../components/Logo/Logo";
-
-
-const Screen = styled.View`
-  flex: 1;
-  background-color: ${Styles.Color.SCREEN_BACKGROUND};
-  padding-bottom: ${getBottomSpace()}px;
-
-`;
-
-const Header = styled.View`
-  justify-content: space-evenly;
-  align-items: center;
-  background-color: ${Styles.Color.PRIMARY};
-  padding-bottom: 10px;
-`;
 class LoginScreen extends Component {
   state = {
     email: "",
@@ -40,16 +26,15 @@ class LoginScreen extends Component {
     spinner: false,
   };
 
-
   onChangeText = (text, input) => {
-    this.setState((previousState) => ({
+    this.setState(previousState => ({
       [input]: text,
       errors: { ...previousState.errors, [input]: "" },
     }));
   };
 
   showInputError = (input, error, callback = null) => {
-    this.setState((previousState) => ({
+    this.setState(previousState => ({
       errors: {
         ...previousState.errors,
         [input]: error,
@@ -76,7 +61,6 @@ class LoginScreen extends Component {
       // this.firebaseAuth(email, password);
     }
   };
-
 
   loginFacebook = async () => {
     this.setState({ spinner: true });
@@ -107,7 +91,6 @@ class LoginScreen extends Component {
         >
           <Header>
             <Logo />
-           
           </Header>
           <Spinner visible={spinner} />
 
@@ -131,7 +114,7 @@ class LoginScreen extends Component {
                 returnKeyType="next"
                 autoCapitalize="none"
                 blurOnSubmit={false}
-                onChangeText={(text) => this.onChangeText(text, "email")}
+                onChangeText={text => this.onChangeText(text, "email")}
                 placeholderTextColor="#FFF"
                 InputLeftElement={
                   <Icon
@@ -164,7 +147,7 @@ class LoginScreen extends Component {
                 placeholder={"placeholders.password"}
                 returnKeyType="done"
                 returnKeyLabel={"buttons.login"}
-                onChangeText={(text) => this.onChangeText(text, "password")}
+                onChangeText={text => this.onChangeText(text, "password")}
                 placeholderTextColor="#FFF"
                 InputLeftElement={
                   <Icon

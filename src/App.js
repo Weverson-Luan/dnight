@@ -2,7 +2,7 @@ import React from "react";
 
 import { NativeBaseProvider, extendTheme } from "native-base";
 
-import Login from "./screens/ScreenLogin";
+import Login from "./screens/Login";
 
 export default function App() {
   const theme = extendTheme({
