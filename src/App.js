@@ -2,7 +2,7 @@ import React from "react";
 
 import { NativeBaseProvider, extendTheme } from "native-base";
 
-import Login from "./screens/ScreenLogin";
+import { Screen } from "./screens/Login";
 
 export default function App() {
   const theme = extendTheme({
@@ -44,7 +44,7 @@ export default function App() {
   // StartApp.onStart(); // Start app functions
   return (
     <NativeBaseProvider theme={theme}>
-      <Login />
+      <Screen />
     </NativeBaseProvider>
   );
 }
