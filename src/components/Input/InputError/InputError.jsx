@@ -6,7 +6,9 @@ import { Styles } from "../../../commom/styles";
 const styles = StyleSheet.create({
   error: {
     marginHorizontal: 8,
+    marginBottom: 10,
     color: Styles.Color.ERROR,
+    fontSize: 13,
     alignSelf: "flex-end",
   },
 });
