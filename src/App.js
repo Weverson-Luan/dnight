@@ -3,9 +3,13 @@ import React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Login from "./screens/Login";
 =======
 import { Screen } from "./screens/Login";
+>>>>>>> develop
+=======
+import Login from "./screens/Login";
 >>>>>>> develop
 
 export default function App() {
@@ -48,7 +52,7 @@ export default function App() {
   // StartApp.onStart(); // Start app functions
   return (
     <NativeBaseProvider theme={theme}>
-      <Screen />
+      <Login />
     </NativeBaseProvider>
   );
 }

@@ -127,8 +127,11 @@ package-lock.json
 *.hprof
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> develop
+=======
+>>>>>>> develop
 # expo 
-.expo
+/.expo/
