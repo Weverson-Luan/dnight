@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import { getBottomSpace } from "react-native-iphone-x-helper";
-import Styles from "../../commom/styles";
+import { Styles } from "../../commom/styles";
 
 export const Container = styled.View`
   flex: 1;

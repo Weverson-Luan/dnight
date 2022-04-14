@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 
-// import React, { Component } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import {
-  getStatusBarHeight,
-  getBottomSpace,
-} from "react-native-iphone-x-helper";
+import { getStatusBarHeight } from "react-native-iphone-x-helper";
+import validator from "validator";
+
 import { FormControl, Stack, Input } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import validator from "validator";
 import Spinner from "react-native-loading-spinner-overlay";
-import styled from "styled-components/native";
 
 import { PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
 import { InputError } from "../../components/Input/InputError/InputError";
-
 import Constants from "../../commom/constants";
 import { Styles } from "../../commom/styles";
 import { Logo } from "../../components/Logo/Logo";
-import { Header } from "./styles";
+
+import { Container, Header } from "./style";
 
 export default function Login({ navigation }) {
   const [loging, setLoging] = useState({
@@ -28,18 +24,7 @@ export default function Login({ navigation }) {
     spinner: false,
   });
 
-  // state = {
-  //   email: "",
-  //   password: "",
-  //   errors: {},
-  //   spinner: false,
-  // };
-
   const handleChange = (text, input) => {
-    // setLoging(previousState => ({
-    //   [input]: text,
-    //   errors: { ...previousState.errors, [input]: "" },
-    // }));
     setLoging(...loging, {
       [input]: text,
       errors: { ...loging.errors, [input]: "" },
@@ -47,13 +32,6 @@ export default function Login({ navigation }) {
   };
 
   const showInputError = (input, error, callback = null) => {
-    // setLoging(previousState => ({
-    //   errors: {
-    //     ...previousState.errors,
-    //     [input]: error,
-    //   },
-    // }));
-
     setLoging(...loging, {
       errors: { ...loging.errors, [input]: error },
     });
@@ -84,7 +62,7 @@ export default function Login({ navigation }) {
 
   const { spinner, errors, email, password } = loging;
   return (
-    <Screen>
+    <Container>
       <View
         style={{
           height: getStatusBarHeight(),
@@ -159,7 +137,7 @@ export default function Login({ navigation }) {
               style={{ color: "#fff", height: 50 }}
               variant={"none"}
               value={password}
-              secureTextEntry={password}
+              secureTextEntry={true}
               placeholder={"placeholders.password"}
               returnKeyType="done"
               returnKeyLabel={"buttons.login"}
@@ -281,7 +259,6 @@ export default function Login({ navigation }) {
                 onPress={() => {}}
                 activeOpacity={0.7}
               >
-<<<<<<< HEAD
                 {/* <Image
                     source={Icons.TWITTER}
                     style={{
@@ -289,24 +266,11 @@ export default function Login({ navigation }) {
                       height: Styles.Metrics.WIDTH * 0.12,
                     }}
                   /> */}
-=======
-                <Image
-                  source={Icons.TWITTER}
-                  style={{
-                    width: Styles.Metrics.WIDTH * 0.12,
-                    height: Styles.Metrics.WIDTH * 0.12,
-                  }}
-                />
->>>>>>> develop
               </TouchableOpacity>
             </View>
           </View>
         }
       </View>
-<<<<<<< HEAD
-    </Screen>
-=======
     </Container>
->>>>>>> develop
   );
 }
