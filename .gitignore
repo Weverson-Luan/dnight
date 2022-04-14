@@ -126,4 +126,4 @@ package-lock.json
 *.hprof
 
 # expo 
-.expo
+/.expo/
