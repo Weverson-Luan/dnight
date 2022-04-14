@@ -126,12 +126,5 @@ package-lock.json
 # Android memory profiler files
 *.hprof
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
-=======
->>>>>>> develop
 # expo 
 /.expo/
