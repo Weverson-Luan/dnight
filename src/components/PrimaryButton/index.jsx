@@ -1,6 +1,5 @@
 import React from "react";
-import { Text, StyleSheet, ViewPropTypes } from "react-native";
-import { Button, Form } from "native-base";
+import { Button } from "native-base";
 import PropTypes from "prop-types";
 
 export const PrimaryButton = ({

@@ -6,8 +6,8 @@ import { FormControl, Stack, Input } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Spinner from "react-native-loading-spinner-overlay";
 
-import { PrimaryButton } from "../../components/PrimaryButton/PrimaryButton";
-import { InputError } from "../../components/Input/InputError/InputError";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import { InputError } from "../../components/Input/InputError";
 import Icons from "../../commom/icons";
 import Constants from "../../commom/constants";
 import { Styles } from "../../commom/styles";
@@ -133,7 +133,7 @@ export default function Screen({ navigation }) {
         <View style={flexRow}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("RECOVER_PASSWORD_SCREEN");
+              navigation.navigate("RecoverPassword");
             }}
           >
             <Title>{i18n.t("buttons.forgotPassword")}</Title>
@@ -141,7 +141,7 @@ export default function Screen({ navigation }) {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("REGISTER_SCREEN", {
+              navigation.navigate("Register", {
                 updateMode: false,
               });
             }}
