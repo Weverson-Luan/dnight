@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
-import { Styles, Constants } from "../../commom";
+import { Styles } from "../../commom/styles";
+import Constants from "../../commom/constants";
 import { launchImageLibrary } from "react-native-image-picker";
 import { FormControl, Input, Stack, Select } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import i18n from "../../i18n";
 import { MaskService } from "react-native-masked-text";
-import { InputError, ProfilePicture, PrimaryButton } from "../../components";
+import { InputError } from "../../components/Input/InputError";
+
+// import { InputError, ProfilePicture, PrimaryButton } from "../../components";
 import Slider from "@react-native-community/slider";
 // import validator from "validator";
 import database from "@react-native-firebase/database";
@@ -17,8 +20,8 @@ import storage from "@react-native-firebase/storage";
 import auth from "@react-native-firebase/auth";
 import { Image } from "react-native-compressor";
 import Spinner from "react-native-loading-spinner-overlay";
-import HelperFunctions from "../../utils/HelperFunctions";
-import AppState from "../../api/AppState";
+import HelperFunctions from "../../utils/HelperFuntions";
+import AppState from "../../services/AppState";
 import AwesomeAlert from "../../utils/AwesomeAlert";
 import { Container, ContentForm, ContentImage, Screen } from "./style";
 
@@ -32,7 +35,6 @@ const IMAGE_PICKER_OPTIONS = {
   takePhotoButtonTitle: i18n.t("buttons.takePhoto"),
   chooseFromLibraryButtonTitle: i18n.t("buttons.chooseFromLibrary"),
 };
-
 function Register() {
   const [data, setData] = useState({
     picture: {},
@@ -44,7 +46,7 @@ function Register() {
     password: "",
     showPassword: "",
     eventDistance: 25,
-    updateMode: route.params.updateMode,
+    // updateMode: route.params.updateMode,
     errors: {},
     spinner: false,
     pictureLink: "",
@@ -66,43 +68,42 @@ function Register() {
   // };
 
   useEffect(() => {
-    analytics().logScreenView({
-      screen_name: "RegisterScreen",
-    });
-    const { updateMode } = data;
-
-    let title;
-    if (updateMode) {
-      title = "Editar perfil";
-      this.getUserData();
-    } else {
-      title = "Registrar-se";
-    }
-    this.props.navigation.setOptions({
-      title: title,
-    });
+    // analytics().logScreenView({
+    //   screen_name: "Register",
+    // });
+    // const { updateMode } = data;
+    // let title;
+    // if (updateMode) {
+    //   title = "Editar perfil";
+    //   // this.getUserData();
+    // } else {
+    //   title = "Registrar-se";
+    // }
+    // navigation.setOptions({
+    //   title: title,
+    // });
   }, []);
 
-  getUserData = () => {
-    database()
-      .ref("users")
-      .child(AppState.getUid())
-      .once("value")
-      .then(snapshot => {
-        const data = snapshot.val();
+  // getUserData = () => {
+  //   database()
+  //     .ref("users")
+  //     .child(AppState.getUid())
+  //     .once("value")
+  //     .then(snapshot => {
+  //       const data = snapshot.val();
 
-        setData({
-          picture: { uri: data.profilePicture },
-          username: data.username,
-          email: data.email,
-          phone: data.phone,
-          birthDate: data.birthDate,
-          gender: data.gender,
-          password: data.password,
-          eventDistance: data.eventDistance,
-        });
-      });
-  };
+  //       setData({
+  //         picture: { uri: data.profilePicture },
+  //         username: data.username,
+  //         email: data.email,
+  //         phone: data.phone,
+  //         birthDate: data.birthDate,
+  //         gender: data.gender,
+  //         password: data.password,
+  //         eventDistance: data.eventDistance,
+  //       });
+  //     });
+  // };
 
   selectAvatar = () => {
     launchImageLibrary(IMAGE_PICKER_OPTIONS, response => {
@@ -242,7 +243,7 @@ function Register() {
     if (picture.uri.slice(0, picture.uri.indexOf(":")) !== "https") {
       let filename =
         "IMG_" +
-        HelperFunctions.getCurrentDate("all") +
+        HelperFunctions("all") +
         "_DNIGHT_" +
         Math.floor(Math.random() * (9999 - 1000)) +
         1000;
@@ -289,7 +290,7 @@ function Register() {
 
         var filename =
           "IMG_" +
-          HelperFunctions.getCurrentDate("all") +
+          HelperFunctions("all") +
           "_DNIGHT_" +
           Math.floor(Math.random() * (9999 - 1000)) +
           1000;
