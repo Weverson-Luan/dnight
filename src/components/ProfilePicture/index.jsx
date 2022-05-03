@@ -10,8 +10,8 @@ import { Image } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import PropTypes from "prop-types";
 
-import i18n from "../i18n";
-import { Styles } from "../commom";
+import i18n from "../../i18n";
+import { Styles } from "../../commom/styles";
 
 const styles = StyleSheet.create({
   pictureContainer: {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfilePicture = ({ picture, onPress, style }) => (
+export const ProfilePicture = ({ picture, onPress, style }) => (
   <TouchableOpacity
     activeOpacity={0.6}
     onPress={onPress}
@@ -75,4 +75,4 @@ ProfilePicture.defaultProps = {
   style: {},
 };
 
-export default ProfilePicture;
+

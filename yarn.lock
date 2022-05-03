@@ -3509,11 +3509,6 @@ csstype@^3.0.2:
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.0.11.tgz"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
 
-date-and-time@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.npmjs.org/date-and-time/-/date-and-time-0.9.0.tgz"
-  integrity sha512-4JybB6PbR+EebpFx/KyR5Ybl+TcdXMLIJkyYsCx3P4M4CWGMuDyFF19yh6TyasMAIF5lrsgIxiSHBXh2FFc7Fg==
-
 date-fns@^2.25.0:
   version "2.28.0"
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz"
@@ -6122,13 +6117,10 @@ react-native-maps@^0.29.3:
   dependencies:
     "@types/geojson" "^7946.0.7"
 
-react-native-masked-text@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/react-native-masked-text/-/react-native-masked-text-1.13.0.tgz"
-  integrity sha512-iMku5Ky6DP4fTRosjsYNJOhH8yoBQCzRALBdv1wVDKmCBQhhVE8RHr5EW4SNUjkYTZL473sDdEKl4NI948q9FQ==
-  dependencies:
-    date-and-time "0.9.0"
-    tinymask "1.0.2"
+react-native-mask-input@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-mask-input/-/react-native-mask-input-1.2.0.tgz#08da62742b34697d1e42d086fb4640951caea5a2"
+  integrity sha512-0bLJ9Szlly4tt59RrbLBS5TSJAGVoH22Hpka85HQ3q4qy10AH+UkcDkozXEonSY5oJK6sobnmzKQ4px5+mkCWg==
 
 react-native-modal-selector@^2.1.0:
   version "2.1.0"
@@ -7063,11 +7055,6 @@ tinycolor2@^1.4.2:
   version "1.4.2"
   resolved "https://registry.npmjs.org/tinycolor2/-/tinycolor2-1.4.2.tgz"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
-
-tinymask@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/tinymask/-/tinymask-1.0.2.tgz"
-  integrity sha1-3zd1qUCHsNPQVsJW6JI8AbfsCUE=
 
 tmpl@1.0.5:
   version "1.0.5"
