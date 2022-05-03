@@ -1,7 +1,3 @@
-class AwesomeAlert {
-
-    show = (message) => {
-        alert(message)
-    }
-
-} export default new AwesomeAlert()
+export default function AwesomeAlert(message) {
+  return alert(message);
+}

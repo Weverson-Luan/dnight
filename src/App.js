@@ -1,8 +1,5 @@
-import React from "react";
-
 import { NativeBaseProvider, extendTheme } from "native-base";
-
-import Login from "./screens/Login";
+import Routes from "./routes";
 
 export default function App() {
   const theme = extendTheme({
@@ -44,7 +41,7 @@ export default function App() {
   // StartApp.onStart(); // Start app functions
   return (
     <NativeBaseProvider theme={theme}>
-      <Login />
+      <Routes />
     </NativeBaseProvider>
   );
 }
