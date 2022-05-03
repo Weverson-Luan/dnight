@@ -36,7 +36,6 @@ export function Register(){
     password: "",
     eventDistance: 25,
     spinner: false,
-    showPassword: false,
     updateMode: false,
   })
 
@@ -50,6 +49,8 @@ export function Register(){
   });
   const [picture, setPicture] = useState({});
   const [selectAvatar, setSelectAvatar] = useState();
+  const [ showPassword, setShowPassword] = useState(false);
+  
   return(
     <Screen>
         <ContentImage>
@@ -72,48 +73,30 @@ export function Register(){
               w="100%"
               style={stackInputMask}
             >
-              <Input
-                variant="unstyled"
-                color={"black"}
+            <Icon name="account" size={24} color={Styles.Color.PLACEHOLDER}/>
+               <MaskInput
                 value={dataLogin.username}
+                onChangeText={( username ) => setDataLogin({username})}
+                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
                 placeholder={`${i18n.t("placeholders.name")}*`}
-                placeholderTextColor={Styles.Color.PLACEHOLDER}
-                returnKeyType="next"
-                autoCapitalize="words"
-                blurOnSubmit={false}
-                onChangeText={username => setDataLogin({username})}
-                InputLeftElement={<Icon name="account" size={24} color={Styles.Color.PLACEHOLDER}/>}
-              />
+                />
+            
             </Stack>
             {errors.username ? <InputError error={errors.username} /> : null}
 
             <Stack
-                space={4}
-                w="100%"
-                style={{
-                  borderColor: "transparent",
-                  backgroundColor: !dataLogin.updateMode
-                    ? Styles.Color.TEXT_PRIMARY
-                    : "#dcdcdc",
-                  borderRadius: 10,
-                  marginTop: 8,
-                  paddingHorizontal: 8,
-                }}
+               space={4}
+               w="100%"
+               style={stackInputMask}
               >
-                <Input
-                  variant="unstyled"
-                  color={"black"}
-                  value={dataLogin.email}
-                  placeholder={`${i18n.t("placeholders.email")}*`}
-                  placeholderTextColor={Styles.Color.PLACEHOLDER}
-                  returnKeyType="next"
-                  autoCapitalize="words"
-                  blurOnSubmit={false}
-                  editable={!dataLogin.updateMode}
-                  disabled={dataLogin.updateMode}
-                  onChangeText={email => setDataLogin({ email})}
-                  InputLeftElement={<Icon name="email" size={24} color={Styles.Color.PLACEHOLDER}/>}
+               <Icon name="email" size={24} color={Styles.Color.PLACEHOLDER}/>
+               <MaskInput
+                value={dataLogin.email}
+                onChangeText={( email ) => setDataLogin({email})}
+                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
+                placeholder={`${i18n.t("placeholders.email")}*`}
                 />
+               
               </Stack>
               {errors.email ? <InputError error={errors.email} /> : null}
 
@@ -141,7 +124,7 @@ export function Register(){
               w="100%"
               style={stackInputMask}
             >
-               <Icon name="calendar" size={24} color={Styles.Color.PLACEHOLDER}/>
+              <Icon name="calendar" size={24} color={Styles.Color.PLACEHOLDER}/>
               <MaskInput
                 value={dataLogin.birthDate}
                 mask={Masks.DATE_DDMMYYYY}
@@ -187,40 +170,24 @@ export function Register(){
               <Stack
                 space={4}
                 w="100%"
-                style={{
-                  borderColor: "transparent",
-                  backgroundColor: !dataLogin.updateMode
-                    ? Styles.Color.TEXT_PRIMARY
-                    : "#dcdcdc",
-                  borderRadius: 10,
-                  marginTop: 8,
-                  paddingHorizontal: 8,
-                }}
+                style={stackInputMask}
               >
-                <Input
-                  variant="unstyled"
-                  color={"black"}
-                  value={dataLogin.password}
-                  secureTextEntry={!dataLogin.password}
-                  placeholder={`${i18n.t("placeholders.password")}*`}
-                  placeholderTextColor={Styles.Color.PLACEHOLDER}
-                  returnKeyType="next"
-                  returnKeyLabel={i18n.t("buttons.login")}
-                  blurOnSubmit={false}
-                  editable={!dataLogin.updateMode}
-                  disabled={dataLogin.updateMode}
-                  onChangeText={password => setDataLogin({password})}
-                  InputLeftElement={<Icon name="lock" size={24} color={Styles.Color.PLACEHOLDER}/>}
-                  InputRightElement={
-                    <Icon
-                      name={ dataLogin.showPassword ? "eye-off-outline" : "eye-outline"}
+              <Icon name="lock" size={24} color={Styles.Color.PLACEHOLDER}/>
+              <MaskInput
+                value={dataLogin.password}
+                onChangeText={( password ) => setDataLogin({password})}
+                secureTextEntry={!showPassword}
+                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER, width: '80%'}}
+                placeholder={`${i18n.t("placeholders.password")}*`}
+               />
+                 <Icon
+                      name={ showPassword ? "eye-off-outline" : "eye-outline"}
                       type="MaterialCommunityIcons"
                       size={24}
-                      style={{ color: Styles.Color.PLACEHOLDER }}
-                      onPress={() => setDataLogin(!dataLogin.showPassword)}
+                      style={{ color: Styles.Color.PLACEHOLDER, marginLeft: 'auto' }}
+                      onPress={() => setShowPassword(!showPassword)}
                     />
-                  }
-                />
+               
               </Stack>
             ) : null}
             {errors.password ? <InputError error={errors.password} /> : null}
