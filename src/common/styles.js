@@ -28,6 +28,9 @@ const FontSize = {
   MEDIUM: 16,
   BIG: 18,
   EXTRA_BIG: 20,
+  EXTRA_BIG_24: 24,
+  EXTRA_BIG_26: 26,
+  EXTRA_BIG_28: 28,
 };
 
 const Metrics = {

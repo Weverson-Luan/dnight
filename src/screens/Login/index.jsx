@@ -8,9 +8,9 @@ import Spinner from "react-native-loading-spinner-overlay";
 
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { InputError } from "../../components/Input/InputError";
-import Icons from "../../commom/icons";
-import Constants from "../../commom/constants";
-import { Styles } from "../../commom/styles";
+import Icons from "../../common/icons";
+import Constants from "../../common/constants";
+import { Styles } from "../../common/styles";
 import { Logo } from "../../components/Logo/Logo";
 import i18n from "../../i18n";
 

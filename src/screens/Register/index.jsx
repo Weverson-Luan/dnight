@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
-import { FormControl, Stack, Input, Select } from "native-base";
+import { FormControl, Stack, Select } from "native-base";
 
 //slider react-native-community-slider
 import Slider from "@react-native-community/slider";
@@ -12,7 +12,7 @@ import MaskInput, { Masks } from 'react-native-mask-input';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 //commons
-import { Styles } from "../../commom/styles";
+import { Styles } from "../../common/styles";
 
 // i18n
 import i18n from "../../i18n";
@@ -23,10 +23,22 @@ import { ProfilePicture } from "../../components/ProfilePicture";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
 //styles-components
-import { Screen, formControl, ContentImage, ContentForm, stackInputMask  } from "./style";
+import { 
+  Screen, 
+  formControl, 
+  ContentImage, 
+  ContentForm,
+  inputError,
+  maskInput,
+  stack,
+  stackDistanceFlexRow,
+  stackDistance,
+  contentForm, 
+  stackInputMask, 
+  stackBirthDate
+} from "./style";
 
-
-export function Register(){
+export function Register({navigation}){
   const [dataLogin, setDataLogin] = useState({
     username: "",
     email: "",
@@ -60,7 +72,7 @@ export function Register(){
           />
           {errors.picture ? (
             <InputError
-              style={{ alignSelf: "center", marginTop: 10 }}
+              style={inputError}
               error={errors.picture}
             />
           ) : null}
@@ -77,7 +89,7 @@ export function Register(){
                <MaskInput
                 value={dataLogin.username}
                 onChangeText={( username ) => setDataLogin({username})}
-                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
+                style={maskInput}    
                 placeholder={`${i18n.t("placeholders.name")}*`}
                 />
             
@@ -93,7 +105,7 @@ export function Register(){
                <MaskInput
                 value={dataLogin.email}
                 onChangeText={( email ) => setDataLogin({email})}
-                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
+                style={maskInput}    
                 placeholder={`${i18n.t("placeholders.email")}*`}
                 />
                
@@ -105,20 +117,16 @@ export function Register(){
               w="100%"
               style={stackInputMask}
             >
-              
-
               <Icon name="phone" size={24} color={Styles.Color.PLACEHOLDER}/>
                <MaskInput
                 value={dataLogin.phone}
                 mask={Masks.BRL_PHONE}
                 onChangeText={( unmasked ) => setDataLogin({phone: unmasked})}
-                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
+                style={maskInput}    
                 />
             
             </Stack>
             {errors.phone ? <InputError error={errors.phone} /> : null}
-
-
             <Stack
               space={4}
               w="100%"
@@ -129,24 +137,14 @@ export function Register(){
                 value={dataLogin.birthDate}
                 mask={Masks.DATE_DDMMYYYY}
                 onChangeText={( unmasked ) => setDataLogin({birthDate: unmasked})}
-                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER}}    
-               />
-              
+                style={maskInput}    
+               />     
             </Stack>
             {errors.birthDate ? <InputError error={errors.birthDate} /> : null}
-
-
             <Stack
               space={4}
               w="100%"
-              style={{
-                width: '100%',
-                backgroundColor: '#FFF',
-                marginTop: 10,
-                paddingHorizontal: 3,
-                paddingVertical: 3,
-                borderRadius: 10,
-              }}
+              style={stackBirthDate}
             >
               <Select
                 variant="unstyled"
@@ -165,7 +163,6 @@ export function Register(){
               </Select>
             </Stack>
             {errors.gender ? <InputError error={errors.gender} /> : null}
-
             {!dataLogin.updateMode ? (
               <Stack
                 space={4}
@@ -177,7 +174,7 @@ export function Register(){
                 value={dataLogin.password}
                 onChangeText={( password ) => setDataLogin({password})}
                 secureTextEntry={!showPassword}
-                style={{paddingLeft: 10, color: Styles.Color.PLACEHOLDER, width: '80%'}}
+                style={maskInput}
                 placeholder={`${i18n.t("placeholders.password")}*`}
                />
                  <Icon
@@ -191,40 +188,22 @@ export function Register(){
               </Stack>
             ) : null}
             {errors.password ? <InputError error={errors.password} /> : null}
-
-
             <Stack
               space={4}
               w="100%"
-              style={{
-                borderColor: "transparent",
-                backgroundColor: Styles.Color.TEXT_PRIMARY,
-                borderRadius: 10,
-                marginTop: 8,
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-                flexDirection: "column",
-              }}
+              style={stack}
             >
               <Stack
                 space={4}
-                w="100%"
-                style={{
-                  alignSelf: "stretch",
-                  borderColor: "transparent",
-                  justifyContent: "flex-start",
-                }}
+                w="100%"u
+                style={stackDistance}
               >
                 <Text  style={{color: Styles.Color.PLACEHOLDER }}>Distância de eventos</Text>
               </Stack>
               <Stack
                 space={4}
                 w="100%"
-                style={{
-                  borderColor: "transparent",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
+                style={stackDistanceFlexRow}
               >
                 <Icon name="google-maps" size={24}  color={Styles.Color.PLACEHOLDER}/>
                 <Slider
@@ -246,16 +225,11 @@ export function Register(){
             </Stack>
 
         <InputError error={errors.password} />
-
-      
         <ContentForm
-            style={{
-              marginVertical: 25,
-              marginHorizontal: 15,
-              justifyContent: "space-between",
-            }}
+            style={contentForm}
           >
             <PrimaryButton
+              onPress={()=> navigation.navigate("Events")}
               title={
                 dataLogin.updateMode
                   ? i18n.t("buttons.update").toUpperCase()
