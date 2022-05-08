@@ -3,7 +3,7 @@ import {
   getBottomSpace,
   getStatusBarHeight,
 } from "react-native-iphone-x-helper";
-import { Styles } from "../../commom/styles";
+import { Styles } from "../../common/styles";
 
 export const Container = styled.View`
   flex: 1;

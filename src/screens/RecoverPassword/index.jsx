@@ -9,7 +9,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 // import auth from "@react-native-firebase/auth";
 
 import i18n from "../../i18n";
-import { Styles } from "../../commom/styles";
+import { Styles } from "../../common/styles";
 import AwesomeAlert from "../../utils/AwesomeAlert";
 import { InputError } from "../../components/Input/InputError";
 import { PrimaryButton } from "../../components/PrimaryButton";

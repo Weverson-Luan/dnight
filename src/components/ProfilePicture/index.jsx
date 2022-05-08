@@ -11,7 +11,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import PropTypes from "prop-types";
 
 import i18n from "../../i18n";
-import { Styles } from "../../commom/styles";
+import { Styles } from "../../common/styles";
 
 const styles = StyleSheet.create({
   pictureContainer: {
