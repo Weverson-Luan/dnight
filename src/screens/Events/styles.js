@@ -3,7 +3,7 @@ import styled from "styled-components";
 //common
 import { Styles } from "../../common/styles";
 
-export const Wrapper = styled.View`
+export const Wrapper = styled.SafeAreaView`
   width: 100%;
   flex: 1;
 
@@ -19,5 +19,4 @@ export const Title = styled.Text`
 `;
 export const WrapperCardSpotlight = styled.View`
   margin-bottom: 16px;
-  
 `;

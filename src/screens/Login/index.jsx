@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native";
+import { TouchableOpacity, View, Image } from "react-native";
 import validator from "validator";
+import { useNavigation } from "@react-navigation/native";
 
 import { FormControl, Stack, Input } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -22,9 +23,8 @@ import {
   stackInput,
   Title,
 } from "./style";
-import { placeholder } from "i18n-js";
 
-export default function Screen({ navigation }) {
+export default function Screen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -34,16 +34,18 @@ export default function Screen({ navigation }) {
   const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const { navigate } = useNavigation();
   const onSubmit = () => {
-    if (!email) {
-      setErrors((errors.email = i18n.t("errors.empty.email")));
+    if (email === "") {
+      setErrors({ email: i18n.t("errors.empty.email") });
     } else if (!validator.isEmail(email)) {
-      setErrors("email", "errors.invalid.email");
+      setErrors({ email: i18n.t("errors.invalid.email") });
     } else if (!password) {
-      setErrors("password", "errors.empty.password");
+      setErrors({ password: i18n.t("errors.empty.password") });
     } else if (password.length < Constants.PASSWORD_MIN_LENGTH) {
-      setErrors("password", "errors.invalid.smallPassword");
+      setErrors({ password: i18n.t("errors.invalid.smallPassword") });
     } else {
+      navigate("Terms");
       // this.firebaseAuth(email, password);
       alert("usuario pode se logar");
     }
@@ -133,7 +135,7 @@ export default function Screen({ navigation }) {
         <View style={flexRow}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("RecoverPassword");
+              navigate("RecoverPassword");
             }}
           >
             <Title>{i18n.t("buttons.forgotPassword")}</Title>
@@ -141,7 +143,7 @@ export default function Screen({ navigation }) {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Register", {
+              navigate("Register", {
                 updateMode: false,
               });
             }}
