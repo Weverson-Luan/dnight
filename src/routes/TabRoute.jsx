@@ -1,19 +1,22 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import Ionicons from "react-native-vector-icons/Ionicons";
+import { Styles } from "../common/styles";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
+
+//screens
 import { MapLocation } from "../screens/Map";
-// import Explorer from "./ExplorerScreen";
-// import Filter from "./FilterScreen";
-// import Profile from "./ProfileScreen";
+import { Filter } from "../screens/Filter";
+import { Explorer } from "../screens/Explorer/";
+import { Profile} from "../screens/Profile";
 
 export function TabRoutes() {
   const { Navigator, Screen } = createBottomTabNavigator();
   return (
     <Navigator
-      // initialRouteName={Explorer}
+      initialRouteName={Filter}
       screenOptions={{ headerShown: false }}
     >
-      <Screen
+      {/* <Screen
         name="MapLocation"
         component={MapLocation}
         // options={({ route }) => ({
@@ -31,8 +34,8 @@ export function TabRoutes() {
         //     );
         //   },
         // })}
-      />
-      {/* <Screen
+      /> */}
+      <Screen
         name="Explorer"
         component={Explorer}
         options={({ route }) => ({
@@ -96,7 +99,7 @@ export function TabRoutes() {
             );
           },
         })}
-      /> */}
+      />
     </Navigator>
   );
 }
