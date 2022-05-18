@@ -16,7 +16,7 @@ export function TabRoutes() {
       initialRouteName={Filter}
       screenOptions={{ headerShown: false }}
     >
-      {/* <Screen
+      <Screen
         name="MapLocation"
         component={MapLocation}
         // options={({ route }) => ({
@@ -34,7 +34,7 @@ export function TabRoutes() {
         //     );
         //   },
         // })}
-      /> */}
+      />
       <Screen
         name="Explorer"
         component={Explorer}

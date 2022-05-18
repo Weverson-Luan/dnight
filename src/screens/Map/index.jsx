@@ -28,6 +28,7 @@ export function MapLocation() {
     lng: -42.2710501,
     markers: [],
   });
+ 
   //   analytics().logScreenView({
   //     screen_name: "MapScreen",
   //   });
@@ -82,18 +83,18 @@ export function MapLocation() {
           showsMyLocationButton={false}
           zoomEnabled={true}
           region={{
-            latitude: userPosition.lat,
-            longitude: userPosition.lng,
+            latitude: -19.794347427358744,
+            longitude: -43.93159329148726,
             latitudeDelta: 0.0,
             longitudeDelta: 1.0,
           }}
         >
           {/* {this.state.markers.map(marker => ( */}
           <MapView.Marker
-            // coordinate={{
-            //   latitude: userPosition.lat,
-            //   longitude: userPosition.log,
-            // }}
+            coordinate={{
+              latitude: -19.794347427358744,
+              longitude: -43.93159329148726,
+            }}
             onPress={() => {}}
             // this.openEventDetails(marker.allData)
           >
