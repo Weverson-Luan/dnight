@@ -90,7 +90,10 @@ export function MapLocation() {
         >
           {/* {this.state.markers.map(marker => ( */}
           <MapView.Marker
-            // coordinate={marker.coordinates}
+            // coordinate={{
+            //   latitude: userPosition.lat,
+            //   longitude: userPosition.log,
+            // }}
             onPress={() => {}}
             // this.openEventDetails(marker.allData)
           >
