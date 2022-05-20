@@ -24,7 +24,7 @@ import {
   Title,
 } from "./style";
 
-export default function Screen() {
+export default function Screen({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -34,7 +34,7 @@ export default function Screen() {
   const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { navigate } = useNavigation();
+
   const onSubmit = () => {
     if (email === "") {
       setErrors({ email: i18n.t("errors.empty.email") });
@@ -45,7 +45,7 @@ export default function Screen() {
     } else if (password.length < Constants.PASSWORD_MIN_LENGTH) {
       setErrors({ password: i18n.t("errors.invalid.smallPassword") });
     } else {
-      navigate("Terms");
+      navigation.navigate("Terms");
       // this.firebaseAuth(email, password);
       alert("usuario pode se logar");
     }
