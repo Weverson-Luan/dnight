@@ -14,21 +14,20 @@ export const Content = {
   borderWidth: 1,
   borderRadius: 10,
   backgroundColor: "#e0e0e0",
-  height: "55%",
+  height: "75%",
   width: "90%",
-  marginVertical: 24,
+  marginVertical: 14,
   marginHorizontal: "10%",
 };
 
-export const contextText = {
-  flex: 1,
+export const placeholderTerm = {
+  margin: 20,
+  color: Styles.Color.PLACEHOLDER,
+};
+
+export const contextButton = {
   width: SCREEN_WIDTH * 0.8,
-  marginHorizontal: "10%",
   flexDirection: "column",
   justifyContent: "space-evenly",
 };
 
-export const placeholderTerm = {
-  margin: 8,
-  color: Styles.Color.PLACEHOLDER,
-};
