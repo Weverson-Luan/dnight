@@ -1,4 +1,4 @@
-import { ScrollView, View, Text } from "react-native";
+import {  View, Text } from "react-native";
 
 // import database from "@react-native-firebase/database";
 import analytics from "@react-native-firebase/analytics";
@@ -9,7 +9,7 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 // import AwesomeAlert from "../../utils/AwesomeAlert";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import { Content, contextText, placeholderTerm, Screen } from "./styles";
+import { Content, contextButton, placeholderTerm, Screen } from "./styles";
 
 export function Terms({ navigation }) {
   const [terms, setTerms] = useState("Carregando...");
@@ -47,11 +47,11 @@ export function Terms({ navigation }) {
 
   return (
     <Screen>
-      <ScrollView style={Content}>
+      <View style={Content}>
         <Text style={placeholderTerm}>{terms.toUpperCase()}</Text>
-      </ScrollView>
+      </View>
 
-      <View style={contextText}>
+      <View style={contextButton}>
         <PrimaryButton
           onPress={() => {
             // analytics().logEvent("acceptedTermsAndPolicy");
@@ -67,24 +67,27 @@ export function Terms({ navigation }) {
         />
 
         {/* {route.params.login ? ( */}
+       <View style={{marginTop:20}}>
         <PrimaryButton
           onPress={() => {
             // analytics().logEvent("refusedTermsAndPolicys");
             // auth()
             //   .signOut()
             //   .then(() => {
-            //     navigation.navigate("Login");
-            //   });
-            navigation.navigate("Login");
-          }}
-          title={i18n.t("buttons.cancel").toUpperCase()}
-          color={"primary"}
-          size={"full"}
-          variant="outline"
-          radius={100}
-          height={45}
-        />
+              //     navigation.navigate("Login");
+              //   });
+              navigation.navigate("Login");
+            }}
+            
+            title={i18n.t("buttons.cancel").toUpperCase()}
+            color="primary"
+            size={"full"}
+            variant="outline"
+            radius={100}
+            height={45}
+            />
         {/* ) : null} */}
+       </View>
       </View>
     </Screen>
   );

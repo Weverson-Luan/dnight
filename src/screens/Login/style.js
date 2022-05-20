@@ -11,7 +11,7 @@ export const Container = styled.View`
   justify-content: center;
   background-color: ${Styles.Color.PRIMARY};
   padding-bottom: ${getBottomSpace()};
-  height: ${getStatusBarHeight()};
+
 `;
 
 export const Header = styled.View`
@@ -22,7 +22,7 @@ export const Header = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-size: ${Styles.FontSize.NORMAL};
+  font-size: ${Styles.FontSize.NORMAL}px;
   color: #fff;
 `;
 

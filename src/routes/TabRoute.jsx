@@ -19,21 +19,21 @@ export function TabRoutes() {
       <Screen
         name="MapLocation"
         component={MapLocation}
-        // options={({ route }) => ({
-        //   tabBarShowLabel: false,
-        //   headerShown: false,
-        //   tabBarIcon: ({ focused, size }) => {
-        //     let iconColor;
+        options={({ route }) => ({
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarIcon: ({ focused, size }) => {
+            let iconColor;
 
-        //     if (route.name === "MapLocation") {
-        //       iconColor = focused ? Styles.Color.GREY_DARK : Styles.Color.GREY;
-        //     }
+            if (route.name === "MapLocation") {
+              iconColor = focused ? Styles.Color.GREY_DARK : Styles.Color.GREY;
+            }
 
-        //     return (
-        //       <Ionicons name={"map-outline"} size={size} color={iconColor} />
-        //     );
-        //   },
-        // })}
+            return (
+              <Ionicons name={"map-outline"} size={size} color={iconColor} />
+            );
+          },
+        })}
       />
       <Screen
         name="Explorer"

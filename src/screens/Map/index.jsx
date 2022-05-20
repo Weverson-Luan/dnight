@@ -3,9 +3,6 @@ import { Image } from "react-native";
 
 import MapView from "react-native-maps";
 import { Content, Screen, ViewFilter } from "./styles";
-// import database from "@react-native-firebase/database";
-// import analytics from "@react-native-firebase/analytics";
-// import auth from "@react-native-firebase/auth";
 // import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 // import Icon from "react-native-vector-icons/MaterialIcons";
@@ -16,17 +13,17 @@ import { Content, Screen, ViewFilter } from "./styles";
 // const eventRef = database().ref("events");
 
 export function MapLocation() {
-  // this.state = {
-  //   markers: [],
-  //   userPosition: {
-  //     lat: -21.9418874,
-  //     lng: -42.2710501,
-  //   },
 
   const [userPosition, setUserPosition] = useState({
     lat: -21.9418874,
     lng: -42.2710501,
     markers: [],
+  });
+
+  const [ marked, setMarked] = useState({
+    lat: -19.791132623631036,
+    lng: -43.94244426257861, 
+    
   });
  
   //   analytics().logScreenView({
@@ -85,11 +82,11 @@ export function MapLocation() {
           region={{
             latitude: -19.794347427358744,
             longitude: -43.93159329148726,
-            latitudeDelta: 0.0,
-            longitudeDelta: 1.0,
+            latitudeDelta: 0.005922,
+            longitudeDelta: 0.00421,
           }}
         >
-          {/* {this.state.markers.map(marker => ( */}
+          {/* FIRST MARKED*/}
           <MapView.Marker
             coordinate={{
               latitude: -19.794347427358744,
@@ -104,7 +101,55 @@ export function MapLocation() {
               resizeMode="contain"
             />
           </MapView.Marker>
-          {/* ))} */}
+         
+
+            {/* TWO MARKED*/ }
+            <MapView.Marker
+            coordinate={{
+              latitude:  -19.795999378439873,
+              longitude: -43.93186074142118
+            }}
+            onPress={() => {}}
+            // this.openEventDetails(marker.allData)
+          >
+            <Image
+              source={require("../../assets/images/map-marker.png")}
+              style={{ width: 36, height: 36 }}
+              resizeMode="contain"
+            />
+          </MapView.Marker>
+
+            {/* TWO TREE*/ }
+            <MapView.Marker
+            coordinate={{
+              latitude:  -19.794737522266256,
+              longitude:  -43.93189292789567
+            }}
+            onPress={() => {}}
+            // this.openEventDetails(marker.allData)
+          >
+            <Image
+              source={require("../../assets/images/map-marker.png")}
+              style={{ width: 36, height: 36 }}
+              resizeMode="contain"
+            />
+          </MapView.Marker>
+
+           {/* TWO FOUR*/ }
+           <MapView.Marker
+            coordinate={{
+              latitude: -19.793859264493562,
+              longitude: -43.93226843713322
+            }}
+            onPress={() => {}}
+            // this.openEventDetails(marker.allData)
+          >
+            <Image
+              source={require("../../assets/images/map-marker.png")}
+              style={{ width: 36, height: 36 }}
+              resizeMode="contain"
+            />
+          </MapView.Marker>
         </MapView>
         <ViewFilter>{/* add search here*/}</ViewFilter>
       </Content>
