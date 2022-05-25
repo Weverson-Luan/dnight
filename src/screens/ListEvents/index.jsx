@@ -22,6 +22,7 @@ import {
   imageText,
   imageText2,
   imageView,
+  ViewCarousel
 } from "./styles";
 
 export function ListEvents() {
@@ -29,7 +30,26 @@ export function ListEvents() {
     chatRooms: [],
     loading: true,
     loadingFeatureEvents: true,
-    featureEvents: [],
+    featureEvents: [
+      {
+        id: 1, 
+        eventImage: 'https://vtex.com/wp-content/uploads/2020/01/Eventos-ecommerce-2020.jpg',
+        tileEvent: 'Samba Prime',
+        nameEvent: "BH FOLIA"
+      },
+      {
+        id: 2, 
+        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTYFneDa99zF_UHgkyFh0elcJi_YVLJEBCqFcQCw-U6ghYba0VjiOTdDYlFkBSiZJ5lDc&usqp=CAU',
+        tileEvent: 'Time Warp Brazil',
+        nameEvent: "Vip Station"
+      },
+      {
+        id: 3, 
+        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmSI-FyLdjND9JfQok-qxjIJF0Hrvln9sJjw&usqp=CAU',
+        tileEvent: 'Samba Prime',
+        nameEvent: "BH FOLIA"
+      },
+    ],
     featuredEvent: [],
     allEvents: [],
     coordinates: {
@@ -46,12 +66,12 @@ export function ListEvents() {
         <Heading
           size="md"
           adjustsFontSizeToFit
-          style={{ color: Styles.Color.PRIMARY_DARK, marginBottom: 15 }}
+          style={{ color: Styles.Color.PRIMARY_DARK, marginBottom: 15, paddingTop: 15 }}
         >
           {i18n.t("labels.featured_event")}
         </Heading>
         <FeaturedEventContainer>
-          {dataEvent.loadingFeatureEvents && (
+          {dataEvent?.loadingFeatureEvents && (
             <Spinner
               color="white"
               size={"sm"}
@@ -60,7 +80,7 @@ export function ListEvents() {
           )}
 
           <Carousel
-            data={dataEvent.featureEvents}
+            data={dataEvent?.featureEvents}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity activeOpacity={0.9}>
@@ -71,7 +91,7 @@ export function ListEvents() {
                       style={imageBackground}
                     >
                       <View style={imageView}>
-                        <Text style={imageText}>kkkk</Text>
+                        <Text style={imageText}>{item.tileEvent}</Text>
 
                         <View
                           style={{
@@ -84,7 +104,7 @@ export function ListEvents() {
                             size={18}
                             color={Styles.Color.PRIMARY_DARK}
                           />
-                          <Text style={imageText2}>kkkk</Text>
+                          <Text style={imageText2}>{item.nameEvent}</Text>
                         </View>
                       </View>
                     </ImageBackground>
@@ -110,7 +130,7 @@ export function ListEvents() {
           {i18n.t("labels.featured_event")}
         </Heading>
         <FeaturedEventContainer>
-          {dataEvent.loadingFeatureEvents && (
+          {dataEvent?.loadingFeatureEvents && (
             <Spinner
               color="white"
               size={"sm"}
@@ -119,7 +139,7 @@ export function ListEvents() {
           )}
 
           <Carousel
-            data={state.allEvents}
+            data={dataEvent?.featureEvents}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity activeOpacity={0.9}>
@@ -130,7 +150,7 @@ export function ListEvents() {
                       style={imageBackground}
                     >
                       <View style={imageView}>
-                        <Text style={imageText}>kkk</Text>
+                      <Text style={imageText}>{item.tileEvent}</Text>
 
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
@@ -140,7 +160,7 @@ export function ListEvents() {
                             size={18}
                             color={Styles.Color.PRIMARY_DARK}
                           />
-                          <Text style={imageText2}>kkk</Text>
+                           <Text style={imageText2}>{item.nameEvent}</Text>
                         </View>
                       </View>
                     </ImageBackground>
