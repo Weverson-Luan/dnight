@@ -70,6 +70,7 @@ node_modules
 .nvm
 /bots/node_modules/
 package-lock.json
+yarn.lock
 
 # OS X
 .DS_Store
@@ -127,4 +128,4 @@ package-lock.json
 *.hprof
 
 # expo 
-/.expo/
+.expo/
