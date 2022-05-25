@@ -25,6 +25,7 @@ export const Title = styled.Text`
   font-size: ${Styles.FontSize.NORMAL};
   color: #fff;
 `;
+
 export const stackInput = {
   backgroundColor: "#FFF",
   borderRadius: 10,
@@ -32,7 +33,7 @@ export const stackInput = {
 };
 export const containerInput = {
   backgroundColor: "#FFF",
-  flexDirection: 'row',
+  flexDirection: "row",
   borderRadius: 10,
   paddingHorizontal: 8,
 };
@@ -40,9 +41,9 @@ export const containerInput = {
 // estilização do css no native base
 
 export const inputError = {
-  alignSelf: "center", 
-  marginTop: 10
-}
+  alignSelf: "center",
+  marginTop: 10,
+};
 export const formControl = {
   width: "80%",
   marginVertical: 40,
@@ -50,8 +51,8 @@ export const formControl = {
 export const maskInput = {
   paddingLeft: 10,
   color: Styles.Color.PLACEHOLDER,
-  width: "80%"
-}
+  width: "80%",
+};
 export const stack = {
   borderColor: "transparent",
   backgroundColor: Styles.Color.TEXT_PRIMARY,
@@ -62,13 +63,13 @@ export const stack = {
   flexDirection: "column",
 };
 export const stackBirthDate = {
-  width: '100%',
-  backgroundColor: '#FFF',
+  width: "100%",
+  backgroundColor: "#FFF",
   marginTop: 10,
   paddingHorizontal: 3,
   paddingVertical: 3,
   borderRadius: 10,
-}
+};
 export const stackDistance = {
   alignSelf: "stretch",
   borderColor: "transparent",
@@ -78,12 +79,12 @@ export const stackDistanceFlexRow = {
   borderColor: "transparent",
   flexDirection: "row",
   alignItems: "center",
-}
+};
 export const contentForm = {
   marginVertical: 25,
   marginHorizontal: 15,
   justifyContent: "space-between",
-}
+};
 export const flexRow = {
   flexDirection: "row",
   justifyContent: "space-between",
@@ -97,6 +98,6 @@ export const stackInputMask = {
   marginTop: 8,
   paddingHorizontal: 10,
   paddingVertical: 10,
-  flexDirection: 'row',
-  alignItems: 'center'
+  flexDirection: "row",
+  alignItems: "center",
 };

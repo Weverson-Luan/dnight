@@ -2,20 +2,16 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Styles } from "../common/styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-
 //screens
 import { MapLocation } from "../screens/Map";
 import { Filter } from "../screens/Filter";
 import { Explorer } from "../screens/Explorer/";
-import { Profile} from "../screens/Profile";
+import { Profile } from "../screens/Profile";
 
 export function TabRoutes() {
   const { Navigator, Screen } = createBottomTabNavigator();
   return (
-    <Navigator
-      initialRouteName={Filter}
-      screenOptions={{ headerShown: false }}
-    >
+    <Navigator initialRouteName={Filter} screenOptions={{ headerShown: false }}>
       <Screen
         name="MapLocation"
         component={MapLocation}
