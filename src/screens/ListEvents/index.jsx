@@ -22,7 +22,7 @@ import {
   imageText,
   imageText2,
   imageView,
-  ViewCarousel
+  ViewCarousel,
 } from "./styles";
 
 export function ListEvents() {
@@ -32,22 +32,25 @@ export function ListEvents() {
     loadingFeatureEvents: true,
     featureEvents: [
       {
-        id: 1, 
-        eventImage: 'https://vtex.com/wp-content/uploads/2020/01/Eventos-ecommerce-2020.jpg',
-        tileEvent: 'Samba Prime',
-        nameEvent: "BH FOLIA"
+        id: 1,
+        eventImage:
+          "https://vtex.com/wp-content/uploads/2020/01/Eventos-ecommerce-2020.jpg",
+        tileEvent: "Samba Prime",
+        nameEvent: "BH FOLIA",
       },
       {
-        id: 2, 
-        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTYFneDa99zF_UHgkyFh0elcJi_YVLJEBCqFcQCw-U6ghYba0VjiOTdDYlFkBSiZJ5lDc&usqp=CAU',
-        tileEvent: 'Time Warp Brazil',
-        nameEvent: "Vip Station"
+        id: 2,
+        eventImage:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTYFneDa99zF_UHgkyFh0elcJi_YVLJEBCqFcQCw-U6ghYba0VjiOTdDYlFkBSiZJ5lDc&usqp=CAU",
+        tileEvent: "Time Warp Brazil",
+        nameEvent: "Vip Station",
       },
       {
-        id: 3, 
-        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmSI-FyLdjND9JfQok-qxjIJF0Hrvln9sJjw&usqp=CAU',
-        tileEvent: 'Samba Prime',
-        nameEvent: "BH FOLIA"
+        id: 3,
+        eventImage:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmSI-FyLdjND9JfQok-qxjIJF0Hrvln9sJjw&usqp=CAU",
+        tileEvent: "Samba Prime",
+        nameEvent: "BH FOLIA",
       },
     ],
     featuredEvent: [],
@@ -66,9 +69,13 @@ export function ListEvents() {
         <Heading
           size="md"
           adjustsFontSizeToFit
-          style={{ color: Styles.Color.PRIMARY_DARK, marginBottom: 15, paddingTop: 15 }}
+          style={{
+            color: Styles.Color.PRIMARY_DARK,
+            marginBottom: 15,
+            paddingTop: 15,
+          }}
         >
-          {i18n.t("labels.featured_event")}
+          {i18n.t("labels.all_events")}
         </Heading>
         <FeaturedEventContainer>
           {dataEvent?.loadingFeatureEvents && (
@@ -150,7 +157,7 @@ export function ListEvents() {
                       style={imageBackground}
                     >
                       <View style={imageView}>
-                      <Text style={imageText}>{item.tileEvent}</Text>
+                        <Text style={imageText}>{item.tileEvent}</Text>
 
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
@@ -160,7 +167,7 @@ export function ListEvents() {
                             size={18}
                             color={Styles.Color.PRIMARY_DARK}
                           />
-                           <Text style={imageText2}>{item.nameEvent}</Text>
+                          <Text style={imageText2}>{item.nameEvent}</Text>
                         </View>
                       </View>
                     </ImageBackground>

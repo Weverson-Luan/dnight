@@ -11,7 +11,7 @@ import { data } from "../../mocks/data-explorer";
 //styled-components
 import { Container, Welcome, Content } from "./styles";
 
-export function Explorer() {
+export function Explorer({ navigation }) {
   const openEvents = item => {
     navigation.navigate("ListEvents", { eventType: item });
   };
