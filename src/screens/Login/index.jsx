@@ -3,7 +3,6 @@ import React, { useState } from "react";
 //Auth
 import auth from '@react-native-firebase/auth';
 
-
 import { TouchableOpacity, View, Image } from "react-native";
 import validator from "validator";
 import { useNavigation } from "@react-navigation/native";
@@ -58,7 +57,7 @@ export default function Screen({navigation}) {
 
   const handle = async() => {
     alert("teste")
-    auth().createUserWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
+    auth().createUserWithEmailAndPassword(email, password)
   .then(() => {
     console.log('User account created & signed in!');
   })
