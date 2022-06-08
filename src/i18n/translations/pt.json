@@ -1,0 +1,184 @@
+{
+  "current": "A linguagem atual é \"{{language}}\"",
+  "app": {
+    "description": "Os melhores eventos próximos de você!"
+  },
+  "maintenance": {
+    "title": "O Dnight App encontra-se em manutenção",
+    "description": "Tente novamente mais tarde."
+  },
+  "banned": {
+    "title": "Sua conta foi banida dos nossos servidores",
+    "description": "Você foi banido por não respeitar as regras propostas pelo aplicativo nos termos de uso."
+  },
+  "messages": {
+    "selectAvatar": "Adicionar Foto",
+    "userRegistered": "Cadastro realizado com sucesso",
+    "userUpdated": "Informações atualizadas",
+    "emailSent": "Email de recuperação enviado",
+    "wait": "Aguarde",
+    "connectingToChat": "Estamos conectando você ao chat",
+    "networkOffline": "Sem conexão com a internet",
+    "privateChat": "Chat Privado",
+    "startPrivateChat": "Deseja iniciar um chat privado com esse usuário?",
+    "chatRequestTitle": "Solicitação de Mensagem",
+    "chatRequestDescription": "Um usuário deseja conversar com você.",
+    "chatTooFarTitle": "Esse chat está muito longe",
+    "chatTooFarDescription": "Para interagir com um chat você deve estar a menos de {{distance}} metros de distância.",
+    "notImplemented": "Recurso não implementado",
+    "blockUser": "Bloquear usuário",
+    "blockUserDescription": "Ao bloquear um usuário você não visualizará mais suas mensagens, status online e não poderá ser convidado para um chat particular.",
+    "waitForConnection": "Conectando...",
+    "loginCanceled": "Login cancelado",
+    "report": "Insira abaixo a sua reclamação, dúvida ou sugestão do Dnight App ou de algum outro usuário. Iremos averiguar sobre sua solicitação e entraremos em contato pelo seu email cadastrado."
+  },
+  "placeholders": {
+    "name": "Nome",
+    "email": "Digite Seu Email",
+    "username": "Nome de usuário",
+    "password": "Digite Sua Senha",
+    "passwordConfirmation": "Confirme a Senha",
+    "typeMessage": "Escreva uma mensagem...",
+    "you": "Você",
+    "phone": "Telefone",
+    "gender": "Sexo",
+    "birthDate": "Data de Nascimento",
+    "genders": {
+      "male": "Masculino",
+      "female": "Feminino",
+      "other": "Outro",
+      "unknown": "Desejo não informar"
+    },
+    "select": "Selecione uma opção:",
+    "report": "Descreva o motivo da denúncia aqui..",
+    "reportUser": "Denunciar Usuário",
+    "search": "Cidade, evento ou data...",
+    "searchMap": "Cidades, estados",
+    "date": "DD/MM/AAAA"
+  },
+  "profile": {
+    "title": "Meu perfil",
+    "contact": "Informações de contato",
+    "favorites": "Eventos salvos",
+    "report": "Reportar",
+    "terms": "Termos de uso e política de privacidade"
+  },
+  "buttons": {
+    "login": "Entrar",
+    "sendReport": "Reportar",
+    "dontHaveAccountYet": "Não possui uma conta?",
+    "back": "Voltar",
+    "edit": "Editar",
+    "buyTicket": "Comprar ingressos",
+    "signOut": "Sair",
+    "signUpNow": {
+      "firstMessage": "Criar uma conta "
+    },
+    "forgotPassword": "Esqueceu sua senha?",
+    "signUp": "Cadastrar",
+    "recoverPassword": "Recuperar Senha",
+    "chooseFromLibrary": "Escolher da Galeria",
+    "takePhoto": "Tirar Foto",
+    "cancel": "Cancelar",
+    "ok": "OK",
+    "enableLocation": "Habilitar Localização",
+    "uploadPhoto": "Carregar foto",
+    "changePhoto": "Alterar",
+    "update": "Atualizar",
+    "talk": "Conversar",
+    "reject": "Recusar",
+    "joinChat": "Acessar Chat",
+    "done": "Pronto",
+    "bannedReport": "Reportar",
+    "userActions": {
+      "requestChat": "Solicitar chat privado",
+      "block": "Bloquear usuário",
+      "report": "Denunciar"
+    },
+    "messageActions": {
+      "copy": "Copiar",
+      "remove": "Apagar"
+    },
+    "report": "Denunciar",
+    "block": "Bloquear",
+    "accept": "Concordo",
+    "search": "Buscar"
+  },
+  "errors": {
+    "generic": "Ocorreu um erro",
+    "logout": "Não foi possível sair",
+    "cantConnectToChat": {
+      "title": "Não foi possível conectar ao chat",
+      "message": "Não conseguimos conecta-lo ao chat, tente novamente."
+    },
+    "request": {
+      "serverError": "Não foi possível realizar a sua solicitação no momento. Tente novamente mais tarde.",
+      "authError": "Não foi possível autenticar",
+      "registerError": "Não foi possível realizar o cadastro",
+      "invalidCredentials": "Nome de usuário e/ou senha inválido(s)",
+      "updateError": "Não foi possível atualizar seus dados"
+    },
+    "empty": {
+      "username": "Informe seu nome",
+      "email": "Informe seu email",
+      "password": "Informe sua senha",
+      "passwordConfirmation": "Confirme sua senha",
+      "picture": "Selecione uma foto",
+      "reason": "Informe o motivo da denúncia"
+    },
+    "invalid": {
+      "username": "",
+      "email": "Este email é inválido",
+      "password": "",
+      "passwordConfirmation": "As senhas não conferem",
+      "picture": "",
+      "passwordDontMatch": "As senhas informadas são diferentes",
+      "smallPassword": "A senha deve conter pelo menos 8 caracteres",
+      "phone": "Nº de telefone inválido",
+      "birthDate": "Data de nascimento inválida"
+    },
+    "location": {
+      "permissionDenied": {
+        "title": "Permissão negada",
+        "message": "A permissão para capturarmos a sua localização foi recusada."
+      },
+      "positionUnavailable": {
+        "title": "GPS desligado",
+        "message": "Verifique se o seu GPS está desligado."
+      },
+      "timeout": {
+        "title": "Tempo esgotado",
+        "message": "Tempo limite para obter localização atingido. Tente novamente."
+      }
+    }
+  },
+  "emptyState": {
+    "generic": "Nenhuma informação disponível"
+  },
+  "permissions": {
+    "location": "Precisamos da sua localização"
+  },
+  "menu": {
+    "home": "Início",
+    "settings": "Configurações",
+    "privacy": "Política de Privacidade",
+    "termsOfUse": "Termos de Uso",
+    "favorites": "Eventos salvos",
+    "logout": "Sair"
+  },
+  "screens": {
+    "recoverPassword": "Recuperar Senha",
+    "register": "Cadastrar",
+    "updateRegister": "Atualizar Cadastro",
+    "events": "Eventos"
+  },
+  "termsOfUse": "Termos e Condições:\n\nO Dnight se compromete a ter o maior cuidado e zelo possível para com seus usuários sendo assim. Mensagens com conteúdos abusivos,  ilegais, nocivos, ameaçadores, jocosos, profanos, discriminatórios, ofensivos ou obscenos, que caracterizem calúnia, difamação, assédio e discriminação de qualquer espécie jamais serão toleradas. Por isso evite utilizar no chat e nas mensagens privadas linguagem chula de baixo calão, depreciativa ou que contenha tom inflamatório com insultos ou incitação ao ódio e à violência. Contribua para um diálogo respeitoso e proveitoso para que todos os usuários possam obter a melhor experiência possível na utilização. Diante da violação a esses termos as mensagens inadequadas poderão ser removidas e o usuário advertido, ou mesmo bloqueado de forma temporária ou definitiva, independendo de justificativa, consulta ou alerta prévio e sem prejuízo de outras medidas.",
+  "labels": {
+    "share": {
+      "message": "Vamos para {{name}} no dia {{date}} em {{local}}?"
+    },
+    "featured_event": "Eventos em destaque",
+    "all_events": "Todos os eventos",
+    "loginWith": "Entrar com"
+  }
+}
