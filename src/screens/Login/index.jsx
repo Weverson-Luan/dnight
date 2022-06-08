@@ -50,21 +50,16 @@ export default function Screen({navigation}) {
       setErrors({ password: i18n.t("errors.invalid.smallPassword") });
     } else {
       navigation.navigate("Terms");
-      // this.firebaseAuth(email, password);
+      auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+    
+        console.error("Error",error);
+      });
       alert("usuario pode se logar");
     }
-  };
-
-  const handle = async() => {
-    alert("teste")
-    auth().createUserWithEmailAndPassword(email, password)
-  .then(() => {
-    console.log('User account created & signed in!');
-  })
-  .catch(error => {
-
-    console.error("Error",error);
-  });
   };
 
   return (
@@ -145,13 +140,13 @@ export default function Screen({navigation}) {
           size={"lg"}
           radius={20}
           height={45}
-          onPress={()=> handle()}
+          onPress={()=> onSubmit()}
         />
 
         <View style={flexRow}>
           <TouchableOpacity
             onPress={() => {
-              navigate("RecoverPassword");
+              navigation.navigate("RecoverPassword");
             }}
           >
             <Title>{i18n.t("buttons.forgotPassword")}</Title>
@@ -159,7 +154,7 @@ export default function Screen({navigation}) {
 
           <TouchableOpacity
             onPress={() => {
-              navigate("Register", {
+              navigation.navigate("Register", {
                 updateMode: false,
               });
             }}
