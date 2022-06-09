@@ -4,6 +4,9 @@ import Carousel from "react-native-snap-carousel";
 
 import { Heading, Spinner } from "native-base";
 
+//google-firebase
+import database from '@react-native-firebase/database';
+
 // icons-vector-icons
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -24,6 +27,7 @@ import {
   imageView,
   ViewCarousel
 } from "./styles";
+import { useEffect } from "react";
 
 export function ListEvents() {
   const [dataEvent, setDataEvent] = useState({
@@ -58,6 +62,16 @@ export function ListEvents() {
     },
     eventDistance: 0,
   });
+
+  useEffect(()=> {
+    database()
+    .ref('/users')
+    .once('value')
+    .then(snapshot => {
+      console.log('User data: ', snapshot.val());
+    })
+    .catch((error)=> console.log("error listing events", error))
+  }, [])
 
   return (
     <Container>
