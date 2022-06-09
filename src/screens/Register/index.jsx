@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { FormControl, Stack, Select } from "native-base";
 
+//google-firebase
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+
+
 //slider react-native-community-slider
 import Slider from "@react-native-community/slider";
 
@@ -39,6 +44,14 @@ import {
 } from "./style";
 
 export function Register({ navigation }) {
+  const [ username, setUsername ] = useState("");
+  const [ email, setEmail ] = useState("");
+  const [ phone, setPhone ] = useState("");
+  const [ birthDate, setBirthDate ] = useState("");
+  const [ gender, setGender ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [eventDistance, setEventDistance] = useState(25);
+
   const [dataLogin, setDataLogin] = useState({
     username: "",
     email: "",
@@ -59,9 +72,34 @@ export function Register({ navigation }) {
     phone: "",
     birthDate: "",
   });
+
   const [picture, setPicture] = useState({});
   const [selectAvatar, setSelectAvatar] = useState();
   const [showPassword, setShowPassword] = useState(false);
+
+  getUserData = async () => {
+    database().ref('users').push().set({
+      picture: "foto2.png" ,
+      username,
+      email,
+      phone,
+      birthDate,
+      gender,
+      password,
+      eventDistance,
+    }).then((snapshot) => {
+     auth().createUserWithEmailAndPassword(email, password)
+      .then(()=> {
+        navigation.navigate("Login")
+        console.log("aprovado", snapshot)
+      })
+      .catch((error)=> console.error("error auth"))
+    })
+    .catch((error)=> {
+      console.error("error", error);
+    });
+    
+  };
 
   return (
     <Screen>
@@ -76,8 +114,8 @@ export function Register({ navigation }) {
         <Stack space={4} w="100%" style={stackInputMask}>
           <Icon name="account" size={24} color={Styles.Color.PLACEHOLDER} />
           <MaskInput
-            value={dataLogin.username}
-            onChangeText={username => setDataLogin({ username })}
+            value={username}
+            onChangeText={username => setUsername(username)}
             style={maskInput}
             placeholder={`${i18n.t("placeholders.name")}*`}
           />
@@ -87,8 +125,8 @@ export function Register({ navigation }) {
         <Stack space={4} w="100%" style={stackInputMask}>
           <Icon name="email" size={24} color={Styles.Color.PLACEHOLDER} />
           <MaskInput
-            value={dataLogin.email}
-            onChangeText={email => setDataLogin({ email })}
+            value={email}
+            onChangeText={email => setEmail(email)}
             style={maskInput}
             placeholder={`${i18n.t("placeholders.email")}*`}
           />
@@ -98,9 +136,9 @@ export function Register({ navigation }) {
         <Stack space={4} w="100%" style={stackInputMask}>
           <Icon name="phone" size={24} color={Styles.Color.PLACEHOLDER} />
           <MaskInput
-            value={dataLogin.phone}
+            value={phone}
             mask={Masks.BRL_PHONE}
-            onChangeText={unmasked => setDataLogin({ phone: unmasked })}
+            onChangeText={unmasked => setPhone(unmasked)}
             style={maskInput}
           />
         </Stack>
@@ -108,9 +146,9 @@ export function Register({ navigation }) {
         <Stack space={4} w="100%" style={stackInputMask}>
           <Icon name="calendar" size={24} color={Styles.Color.PLACEHOLDER} />
           <MaskInput
-            value={dataLogin.birthDate}
+            value={birthDate}
             mask={Masks.DATE_DDMMYYYY}
-            onChangeText={unmasked => setDataLogin({ birthDate: unmasked })}
+            onChangeText={unmasked => setBirthDate(unmasked)}
             style={maskInput}
           />
         </Stack>
@@ -122,8 +160,8 @@ export function Register({ navigation }) {
             mode="dialog"
             style={{ width: 120 }}
             placeholder="Gênero*"
-            selectedValue={dataLogin.gender}
-            onValueChange={gender => setDataLogin({ gender })}
+            selectedValue={gender}
+            onValueChange={gender => setGender(gender)}
             InputLeftElement={
               <Icon
                 name="gender-male-female"
@@ -143,8 +181,8 @@ export function Register({ navigation }) {
           <Stack space={4} w="100%" style={stackInputMask}>
             <Icon name="lock" size={24} color={Styles.Color.PLACEHOLDER} />
             <MaskInput
-              value={dataLogin.password}
-              onChangeText={password => setDataLogin({ password })}
+              value={password}
+              onChangeText={password => setPassword(password)}
               secureTextEntry={!showPassword}
               style={maskInput}
               placeholder={`${i18n.t("placeholders.password")}*`}
@@ -173,8 +211,8 @@ export function Register({ navigation }) {
             />
             <Slider
               style={{ flex: 1, height: 50 }}
-              value={dataLogin.eventDistance}
-              onValueChange={eventDistance => setDataLogin({ eventDistance })}
+              value={eventDistance}
+              onValueChange={eventDistance => setEventDistance(eventDistance)}
               minimumValue={0}
               maximumValue={50}
               minimumTrackTintColor={Styles.Color.PRIMARY}
@@ -193,7 +231,7 @@ export function Register({ navigation }) {
         <ContentForm style={contentForm}>
           <PrimaryButton
             // aqui a validacao do firabase
-            onPress={() => navigation.navigate("Events")}
+            onPress={() =>getUserData()}
             title={
               dataLogin.updateMode
                 ? i18n.t("buttons.update").toUpperCase()
