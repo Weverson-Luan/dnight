@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import validator from "validator";
 import Spinner from "react-native-loading-spinner-overlay";
 
+import auth from '@react-native-firebase/auth';
 
 
 import i18n from "../../i18n";
@@ -14,7 +15,7 @@ import AwesomeAlert from "../../utils/AwesomeAlert";
 import { InputError } from "../../components/Input/InputError";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
-const RecoverPassword = () => {
+const RecoverPassword = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [errors, setErrors] = useState({
@@ -48,29 +49,27 @@ const RecoverPassword = () => {
     } else if (!validator.isEmail(email)) {
       setErrors({ email: i18n.t("errors.invalid.email") });
     } else {
-      // recover();
+       recover();
     }
   };
 
-  // const recover = async ({ navigation }) => {
-  //   setSpinner(true);
-
-  //   auth()
-  //     .sendPasswordResetEmail(email.trim().toLowerCase())
-  //     .then(() => {
-  //       setSpinner(false);
-  //       AwesomeAlert(i18n.t("messages.emailSent"), null, [
-  //         {
-  //           text: i18n.t("buttons.ok"),
-  //           onPress: () => navigation.navigate("Login"),
-  //         },
-  //       ]);
-  //     })
-  //     .catch(error => {
-  //       setSpinner(false);
-  //       AwesomeAlert.show(i18n.t("errors.generic"), error);
-  //     });
-  // };
+  const recover = async () => {
+    auth()
+      .sendPasswordResetEmail(email.trim().toLowerCase())
+      .then(() => {
+        setSpinner(false);
+        AwesomeAlert(i18n.t("messages.emailSent"), null, [
+          {
+            text: i18n.t("buttons.ok"),
+            onPress: () => navigation.navigate("Login"),
+          },
+        ]);
+      })
+      .catch(error => {
+        setSpinner(false);
+        AwesomeAlert.show(i18n.t("errors.generic"), error);
+      });
+  };
 
   return (
     <View
