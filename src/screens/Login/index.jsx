@@ -59,7 +59,6 @@ export default function Screen({navigation}) {
     
         console.error("Error",error);
       });
-      alert("usuario pode se logar");
     }
   };
 
