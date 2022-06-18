@@ -35,24 +35,7 @@ export function ListEvents() {
     loading: true,
     loadingFeatureEvents: true,
     featureEvents: [
-      {
-        id: 1, 
-        eventImage: 'https://vtex.com/wp-content/uploads/2020/01/Eventos-ecommerce-2020.jpg',
-        tileEvent: 'Samba Prime',
-        nameEvent: "BH FOLIA"
-      },
-      {
-        id: 2, 
-        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTYFneDa99zF_UHgkyFh0elcJi_YVLJEBCqFcQCw-U6ghYba0VjiOTdDYlFkBSiZJ5lDc&usqp=CAU',
-        tileEvent: 'Time Warp Brazil',
-        nameEvent: "Vip Station"
-      },
-      {
-        id: 3, 
-        eventImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmSI-FyLdjND9JfQok-qxjIJF0Hrvln9sJjw&usqp=CAU',
-        tileEvent: 'Samba Prime',
-        nameEvent: "BH FOLIA"
-      },
+    
     ],
     featuredEvent: [],
     allEvents: [],
@@ -62,13 +45,38 @@ export function ListEvents() {
     },
     eventDistance: 0,
   });
-
+  const eventsRef = database().ref('events');
   useEffect(()=> {
-    database()
-    .ref('/users')
-    .once('value')
+    eventsRef.once('value')
     .then(snapshot => {
-      console.log('User data: ', snapshot.val());
+      const events_list_id = snapshot.val();
+      for (i = 0; i < Object.keys(events_list_id).length; i++) {
+        eventsRef.child(Object.keys(events_list_id)[i]).once('value').then((snapshot) => {
+          const data = snapshot.val();
+          const eventsObject = {
+            eventName: data.eventName,
+            eventDate: data.eventDate,
+            eventTime: data.eventTime,
+            eventAbout: data.eventAbout,
+            eventCity: data.eventCity,
+            eventLocation: data.eventLocation,
+            eventCategory: data.eventCategory,
+            eventImage: data.eventImage,
+            eventPhone: data.eventPhone,
+            eventTicket: data.eventTicket,
+            eventFeatured: data.eventFeatured,
+            eventChatID: data.eventChatID,
+            eventChild: snapshot.key
+          };
+
+          if(data.eventFeatured){
+            dataEvent.featureEvents.push(eventsObject)
+          }
+        
+        }).catch((error) => {
+          AwesomeAlert.show(error)
+        })
+      }
     })
     .catch((error)=> console.log("error listing events", error))
   }, [])
@@ -105,7 +113,7 @@ export function ListEvents() {
                       style={imageBackground}
                     >
                       <View style={imageView}>
-                        <Text style={imageText}>{item.tileEvent}</Text>
+                        <Text style={imageText}>{item.eventName}</Text>
 
                         <View
                           style={{
@@ -118,7 +126,7 @@ export function ListEvents() {
                             size={18}
                             color={Styles.Color.PRIMARY_DARK}
                           />
-                          <Text style={imageText2}>{item.nameEvent}</Text>
+                          <Text style={imageText2}>{item.eventCity}</Text>
                         </View>
                       </View>
                     </ImageBackground>
@@ -164,7 +172,7 @@ export function ListEvents() {
                       style={imageBackground}
                     >
                       <View style={imageView}>
-                      <Text style={imageText}>{item.tileEvent}</Text>
+                      <Text style={imageText}>{item.eventName}</Text>
 
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
@@ -174,7 +182,7 @@ export function ListEvents() {
                             size={18}
                             color={Styles.Color.PRIMARY_DARK}
                           />
-                           <Text style={imageText2}>{item.nameEvent}</Text>
+                           <Text style={imageText2}>{item.eventCity}</Text>
                         </View>
                       </View>
                     </ImageBackground>
