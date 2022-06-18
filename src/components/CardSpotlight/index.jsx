@@ -59,7 +59,7 @@ export function CardSpotlight({data}){
         <TextSpotlightText>{data.eventName}ol</TextSpotlightText>
         <WrapperLocation>
           <Entypo name="location-pin" size={18} color={Styles.Color.PRIMARY_DARK} />
-          <TextSpotlightLocation>{data.description}</TextSpotlightLocation>
+          <TextSpotlightLocation>{data.description}kk</TextSpotlightLocation>
         </WrapperLocation>
       </WrapperSpotlightDesc>
     </Wrapper>
