@@ -1,24 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { TouchableOpacity, View, Image, Alert } from "react-native";
+
+//react-native-base
+import { FormControl, Stack, Input } from "native-base";
 
 //Authenticate google-firebase
 import auth from '@react-native-firebase/auth';
 
-import { TouchableOpacity, View, Image } from "react-native";
-import validator from "validator";
-import { useNavigation } from "@react-navigation/native";
+//async-storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { FormControl, Stack, Input } from "native-base";
+//validation
+import validator from "validator";
+
+//icons
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+//Spinner
 import Spinner from "react-native-loading-spinner-overlay";
 
+//i18n
+import i18n from "../../i18n";
+
+//components
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { InputError } from "../../components/Input/InputError";
+import { Logo } from "../../components/Logo/Logo";
+
+//commons
 import Icons from "../../common/icons";
 import Constants from "../../common/constants";
 import { Styles } from "../../common/styles";
-import { Logo } from "../../components/Logo/Logo";
-import i18n from "../../i18n";
 
+//styled-components
 import {
   Container,
   flexRow,
@@ -37,7 +51,7 @@ export default function Screen({navigation}) {
   });
   const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [start, setStart] = useState("");
 
   const onSubmit = () => {
     if (email === "") {
@@ -53,15 +67,42 @@ export default function Screen({navigation}) {
       auth().signInWithEmailAndPassword(email, password)
       .then(() => {
         console.log('User account created & signed in!');
-        navigation.navigate("Terms");
+        if(start){
+          return navigation.navigate("Tab")
+        }
+        else{
+          return navigation.navigate("Terms")
+        }
       })
       .catch(error => {
-    
-        console.error("Error",error);
+        Alert.alert(
+          "Usuário não Cadastrado",
+          "Cadastre-se",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => navigation.navigate("Register")}
+          ]
+        );
+       
       });
     }
   };
 
+
+  useEffect(()=> {
+    const handleDnightStart = async () => {
+     const key = "dnight_start";
+     const start = await AsyncStorage.getItem(key);
+     
+     setStart(start);
+    } 
+    handleDnightStart()
+ }, [])
+ 
   return (
     <Container>
       <Header>
