@@ -4,21 +4,20 @@ import {  View, Text, ScrollView } from "react-native";
 //google-firebase
 import database from '@react-native-firebase/database';
 
+// async-storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 import i18n from "../../i18n";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
-
-
 // import AwesomeAlert from "../../utils/AwesomeAlert";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 import { Content, contextButton, placeholderTerm, Screen } from "./styles";
 
 export function Terms({navigation}) {
   const [terms, setTerms] = useState("Carregando...");
-
-
 
   const getPrivacyTerms = async () => {
     database()
@@ -34,6 +33,15 @@ export function Terms({navigation}) {
       });
   };
 
+  
+ const appStart = async () => {
+    try {
+      await AsyncStorage.setItem('dnight_start', "true");
+    } catch (e) {
+      AwesomeAlert.show(e);
+    }
+  }
+
   useEffect(()=> {
     getPrivacyTerms()
   })
@@ -47,6 +55,7 @@ export function Terms({navigation}) {
       <View style={contextButton}>
         <PrimaryButton
           onPress={() => {
+            appStart()
             navigation.navigate("Tab");
           }}
           title={i18n.t("buttons.accept").toUpperCase()}
