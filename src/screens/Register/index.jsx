@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import { FormControl, Stack, Select } from "native-base";
 
@@ -6,12 +6,14 @@ import { FormControl, Stack, Select } from "native-base";
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 
-
 //slider react-native-community-slider
 import Slider from "@react-native-community/slider";
 
 //masked
 import MaskInput, { Masks } from "react-native-mask-input";
+
+//select-image
+import * as ImagePicker from 'expo-image-picker';
 
 //icons
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,6 +23,9 @@ import { Styles } from "../../common/styles";
 
 // i18n
 import i18n from "../../i18n";
+
+//config
+import { PickerImage } from "../../config/SelectImage";
 
 //components
 import { InputError } from "../../components/Input/InputError";
@@ -73,11 +78,12 @@ export function Register({ navigation }) {
     birthDate: "",
   });
 
-  const [picture, setPicture] = useState({});
+  const [picture, setPicture] = useState("");
   const [selectAvatar, setSelectAvatar] = useState();
   const [showPassword, setShowPassword] = useState(false);
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
-  getUserData = async () => {
+ const getUserData = async () => {
     database().ref('users').push().set({
       picture: "foto2.png" ,
       username,
@@ -88,8 +94,9 @@ export function Register({ navigation }) {
       password,
       eventDistance,
     }).then((snapshot) => {
-     auth().createUserWithEmailAndPassword(email, password)
+      auth().createUserWithEmailAndPassword(email, password)
       .then(()=> {
+        alert("Cadastrado com sucesso !")
         navigation.navigate("Login")
         console.log("aprovado", snapshot)
       })
@@ -101,10 +108,32 @@ export function Register({ navigation }) {
     
   };
 
+   /**
+    * SELECT AN IMAGE ON USER DEVICE
+    */
+    const selectImage = async () => {
+      if(status.granted === true){
+         PickerImage()
+         .then((response)=> {
+          setPicture(response)
+         })
+         .catch((error)=> {
+            console.error("Error selectImage", error)
+         });
+      };
+   };
+
+ useEffect(()=> {
+  requestPermission();
+ }, [])
+
   return (
     <Screen>
       <ContentImage>
-        <ProfilePicture picture={picture} onPress={() => setSelectAvatar()} />
+        {
+          picture ?  <ProfilePicture picture={{ uri: picture}}/> :  <ProfilePicture picture={picture} onPress={() => selectImage()} />
+        }
+       
         {errors.picture ? (
           <InputError style={inputError} error={errors.picture} />
         ) : null}
@@ -222,7 +251,7 @@ export function Register({ navigation }) {
 
             <Text style={{ width: 50, color: Styles.Color.PLACEHOLDER }}>
               {/*utilizando interrogação(?) caso  o valor do obejto seja nulo para ele ignorar e seguir o fluxo mesmo se estiver nulo.*/}
-              {dataLogin?.eventDistance?.toFixed(1)} KM
+              {eventDistance?.toFixed(1)} KM
             </Text>
           </Stack>
         </Stack>
@@ -231,7 +260,7 @@ export function Register({ navigation }) {
         <ContentForm style={contentForm}>
           <PrimaryButton
             // aqui a validacao do firabase
-            onPress={() =>getUserData()}
+            onPress={getUserData}
             title={
               dataLogin.updateMode
                 ? i18n.t("buttons.update").toUpperCase()
