@@ -17,7 +17,11 @@
 
 ## 📝 About
 
-**Dnight** Você está buscando algo legal para fazer mas não sabe o quê? Não se preocupe, pois você e muita gente estão na mesma. Para contornar esse problema, nós, do DNIGHT, vamos te indicar o melhor aplicativo para encontrar eventos, os quais fazem a pesquisa por você e te proporcionam resultados que podem ser bem promissores.
+**Dnight** Você está buscando algo legal para fazer mas não sabe o quê? Não se
+preocupe, pois você e muita gente estão na mesma. Para contornar esse problema,
+nós, do DNIGHT, vamos te indicar o melhor aplicativo para encontrar eventos, os
+quais fazem a pesquisa por você e te proporcionam resultados que podem ser bem
+promissores.
 
 ## ⚒️ Stack
 
@@ -41,7 +45,8 @@
 
 ### Running the application
 
-You have two branchs. The master you have project base with layout design only. And, the done you have the project finished with charts implemented.
+You have two branchs. The master you have project base with layout design only.
+And, the done you have the project finished with charts implemented.
 
 Clone this project and start with Expo:
 
@@ -62,6 +67,8 @@ $ expo start
 
 ## ©️ License
 
-This project is under the license [MIT](./LICENSE). </br>
-Feito com ❤️ por Weverson Luan De Sousa. Entre em contato 👋🏽 => **[Linkend](https://www.linkedin.com/in/weverson-luan-de-sousa-1969a81b0/)**</br>
+This project is under the license [MIT](./LICENSE). </br> Feito com ❤️ por
+Weverson Luan De Sousa and Everton souza. Entre em contato 👋🏽 =>
+**[Linkend Weverson Luan](https://www.linkedin.com/in/weverson-luan-de-sousa-1969a81b0/)**</br>,
+**[Linkend Everton Souza](https://www.linkedin.com/in/everton-souza-24101987/)**</br>
 Made by [WLTECH](http://itech.com.br/)
