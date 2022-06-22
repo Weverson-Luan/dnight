@@ -85,7 +85,7 @@ export function Register({ navigation }) {
 
  const getUserData = async () => {
     database().ref('users').push().set({
-      picture: "foto2.png" ,
+      picture,
       username,
       email,
       phone,
@@ -131,7 +131,7 @@ export function Register({ navigation }) {
     <Screen>
       <ContentImage>
         {
-          picture ?  <ProfilePicture picture={{ uri: picture}}/> :  <ProfilePicture picture={picture} onPress={() => selectImage()} />
+          picture ?  <ProfilePicture picture={{ uri: picture}}/> :  <ProfilePicture picture={{uri: picture}}  onPress={() => selectImage()} />
         }
        
         {errors.picture ? (
