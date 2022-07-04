@@ -36,7 +36,7 @@ PrimaryButton.defaultProps = {
   onPress: () => {},
   title: "",
   size: "sm",
-  color: "default",
+  color: "",
   variant: "solid",
-  height: 40,
+  height: 45,
 };
