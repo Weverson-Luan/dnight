@@ -5,6 +5,12 @@ import { TouchableRipple } from 'react-native-paper';
 //icons-vector-icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+//Authenticate google-firebase
+import auth from '@react-native-firebase/auth';
+
+//google-firebase
+import database from '@react-native-firebase/database';
+
 //i18n
 import i18n from '../../i18n';
 
@@ -31,16 +37,34 @@ import {
   touchableRippleBorderRadius,
   imageProfile
 } from "./styles";
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { authLogoutGoogleFirebase } from '../../service/auth/AuthLogoutGoogleFirebase';
 
-export function Profile({props}){
+export function Profile({navigation}){
+  const [user, setUser] = useState({});
+  const [logout, setLogout] = useState(false);
 
-const data = {
-    picture: 'https://i0.wp.com/br.nacaodamusica.com/wp-content/uploads/2020/08/luccas-carlos.png',
-    username: 'Everton Dev',
-    birthDate: '10/02/22',
-    phone: '21 98736-8749',
-    email: 'evertondev@gmail.com',
-  }
+
+
+  useEffect(()=> {
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log("Estou Logado !",user.uid)
+        database().ref('users').child(user.uid).on('value', function (snapshot) {
+        let  userData = snapshot.val();
+        setUser(userData)
+          console.log("Info Perfil", userData)
+        });
+       };
+    });
+
+    
+  }, [])
+
+  logout && authLogoutGoogleFirebase();
+  !user?.phone && alert("Cadastre um número para receber mais informações")
+
   return(
     <Screen>
       <Container>
@@ -57,6 +81,7 @@ const data = {
             borderless={true} 
             rippleColor="rgba(255, 255, 255, .32)" 
             style={touchableRippleBorderRadius}
+            onPress={()=> setLogout(!logout)}
             >
             <Icon name={'logout'} size={28}/>
           </TouchableRipple> 
@@ -66,12 +91,12 @@ const data = {
         <View style={{marginTop: '20%'}}> 
           <ContainerImage>
               <Image
-                source={{ uri: data.picture }}
+                source={{ uri: user?.picture }}
                 style={imageProfile}
               />
             <Content>
-              <Name>{data.username}</Name>
-              <Birth>{data.birthDate}</Birth>
+              <Name>{user?.username}</Name>
+              <Birth>{user?.birthDate}</Birth>
             </Content>
           </ContainerImage>
 
@@ -79,23 +104,23 @@ const data = {
             <FormTitle>{i18n.t('profile.contact')}</FormTitle>
               <ItemDisabled>
                 <Icon name='phone' size={17} color={Styles.Color.GREY_DARK} />
-                <SimpleText>{data.phone}</SimpleText>
+                <SimpleText>{user?.phone ? user?.phone : "(00) 0 0000-0000"}</SimpleText>
               </ItemDisabled>
             <ItemDisabled>
               <Icon name='email' size={17} color={Styles.Color.GREY_DARK} />
-              <SimpleText>{data.email}</SimpleText>
+              <SimpleText>{user?.email}</SimpleText>
             </ItemDisabled>
 
             <Line>
               <InnerLine />
             </Line>
 
-            <ItemEnabled onPress={() =>console.log("favorite")}>
+            <ItemEnabled onPress={() => navigation.navigate('FavoriteEvents')}>
               <Icon name='favorite' size={17} color={Styles.Color.GREY_DARK} />
               <SimpleText>{i18n.t('profile.favorites')}</SimpleText>
             </ItemEnabled>
 
-            <ItemEnabled onPress={() => props.navigation.navigate('REPORT_SCREEN')}>
+            <ItemEnabled onPress={() => navigation.navigate('Report')}>
               <Icon name='report' size={17} color={Styles.Color.GREY_DARK} />
               <SimpleText>{i18n.t('profile.report')}</SimpleText>
             </ItemEnabled>
