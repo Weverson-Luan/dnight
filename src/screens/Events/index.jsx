@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
+
 //google-firebase
 import database from '@react-native-firebase/database';
 
@@ -66,7 +67,7 @@ export function Events(){
       <> 
         <HeaderArrow />
           <Wrapper>
-            <FlatList
+            {/* <FlatList
               showsVerticalScrollIndicator={false}
               data={events}
               keyExtractor={item => item.id}
@@ -76,7 +77,7 @@ export function Events(){
                   <CardSpotlight data={item}/>
                 </WrapperCardSpotlight>
               )} 
-            />
+            /> */}
           </Wrapper>
       </>
   )
