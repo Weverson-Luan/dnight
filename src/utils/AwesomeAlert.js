@@ -1,3 +1,3 @@
-export default function AwesomeAlert(message) {
+export function AwesomeAlert(message) {
   return alert(message);
 }
