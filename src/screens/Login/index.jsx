@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { TouchableOpacity, View, Image, Alert } from "react-native";
 
+import { GoogleSignin, statusCodes,} from '@react-native-google-signin/google-signin';
+
 //react-native-base
 import { FormControl, Stack, Input } from "native-base";
 
-//Authenticate google-firebase
+//google-firebase
 import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+import storage from '@react-native-firebase/storage';
+
+//expo-location
+import * as Location from 'expo-location'
 
 //async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,6 +39,11 @@ import Icons from "../../common/icons";
 import Constants from "../../common/constants";
 import { Styles } from "../../common/styles";
 
+//utils
+import { HelperFunctions } from "../../utils/HelperFuntions";
+//utils
+import { AwesomeAlert } from "../../utils/AwesomeAlert";
+
 //styled-components
 import {
   Container,
@@ -41,6 +53,7 @@ import {
   stackInput,
   Title,
 } from "./style";
+import { AuthGoogleFirebase } from "../../service/auth/AuthGoogleFirebase";
 
 export default function Screen({navigation}) {
   const [email, setEmail] = useState("");
@@ -52,8 +65,28 @@ export default function Screen({navigation}) {
   const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [start, setStart] = useState("");
+  const [logado, setLogado] = useState({});
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [userPositionActual, setUserPositionActual] = useState({
+    coords: {
+      accuracy: 0,
+      altitude: 0,
+      altitudeAccuracy: 1,
+      heading: 0,
+      latitude: 0,
+      longitude: 0,
+      speed: 0,
+    },
+    mocked: false,
+    timestamp: 0,
+  });
+
+  
+  console.log("LOCALIZAÇÃO KKK", userPositionActual?.coords?.latitude)
 
   const onSubmit = () => {
+    setSpinner(true)
     if (email === "") {
       setErrors({ email: i18n.t("errors.empty.email") });
     } else if (!validator.isEmail(email)) {
@@ -66,6 +99,7 @@ export default function Screen({navigation}) {
     
       auth().signInWithEmailAndPassword(email, password)
       .then(() => {
+        setSpinner(true)
         console.log('User account created & signed in!');
         if(start){
           return navigation.navigate("Tab")
@@ -88,20 +122,111 @@ export default function Screen({navigation}) {
           ]
         );
        
-      });
+      })
+      .finally(()=> setSpinner(false))
     }
   };
+// Somewhere in your code
+const authenticationGoogleFirebase = async () => {
+
+  try {
+    // configuration of firebase  
+    AuthGoogleFirebase();
+
+    await GoogleSignin.hasPlayServices();
+    const { user } = await GoogleSignin.signIn();
+    setLogado(user)
 
 
-  useEffect(()=> {
-    const handleDnightStart = async () => {
-     const key = "dnight_start";
-     const start = await AsyncStorage.getItem(key);
-     
-     setStart(start);
-    } 
-    handleDnightStart()
- }, [])
+    //verificando se usuário está logado.
+    const unsubscribe = auth().onAuthStateChanged((userFirebase) => {
+      console.log("ESTOU LOGADO", userFirebase);
+      if (userFirebase) {
+        navigation.navigate("Tab", { screen: "Explorer" });
+      };
+
+    });
+    unsubscribe();
+
+    //criação para autenticação do google-firebase
+    auth().createUserWithEmailAndPassword(user.email, user.id).then(async(userCredential)=> {
+
+      //Pegando localização do usuário
+      const userLocation = await AsyncStorage.getItem("@positionActual");
+      setUserPositionActual(userLocation)
+      const useLocationTransform  = JSON.parse(userLocation);
+
+        database().ref(`users/${userCredential.user.uid}`).set({
+          location: {
+            lat: useLocationTransform?.coords.latitude,
+            lng: useLocationTransform?.coords.latitude,
+          },
+          picture: user.photo,
+          username: user.name,
+          email: user.email,
+          phone: '',
+          birthDate: '',
+          gender: '',
+          password: user.id,
+          eventDistance: '',
+        }).then((snapshot) => {
+          alert("Cadastrado com sucesso !")
+          navigation.navigate("Terms");
+      });
+    })
+    .catch((error)=>{
+      auth().signInWithEmailAndPassword(user.email, user.id)
+      .then((res)=> start ? navigation.navigate("Tab") : navigation.navigate("Terms"))
+    })  
+
+  } catch (error) {
+    alert("oi")
+    console.log("ERROR GOOGLE", error)
+    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      // user cancelled the login flow
+    } else if (error.code === statusCodes.IN_PROGRESS) {
+      // operation (e.g. sign in) is in progress already
+    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      // play services not available or outdated
+    } else {
+      // some other error happened
+    }
+  }
+};
+
+
+
+ useEffect(()=> {
+  const handleDnightStart = async () => {
+    const user = await GoogleSignin.addScopes({
+      scopes: ['https://www.googleapis.com/auth/user.gender.read'],
+    });
+   const key = "dnight_start";
+   const start = await AsyncStorage.getItem(key);
+   
+   setStart(start);
+
+   //Pegando localização do usuário
+   const userLocation = await AsyncStorage.getItem("@positionActual");
+   setUserPositionActual(userLocation)
+   const useLocationTransform  = JSON.parse(userLocation);
+   console.log("AGORA PEGUEI", useLocationTransform.coords.latitude)
+  }; 
+  handleDnightStart();
+
+
+//verificando se usuário está logado.
+  const unsubscribe = auth().onAuthStateChanged(async (userFirebase) => {
+    await AsyncStorage.setItem(process.env.USER_ID, userFirebase.uid)
+    if (userFirebase) {
+      navigation.navigate("Tab");
+    };
+
+  });
+  unsubscribe();
+
+  
+}, []);
  
   return (
     <Container>
@@ -184,6 +309,7 @@ export default function Screen({navigation}) {
           onPress={()=> onSubmit()}
         />
 
+
         <View style={flexRow}>
           <TouchableOpacity
             onPress={() => {
@@ -208,7 +334,7 @@ export default function Screen({navigation}) {
       <Title>{i18n.t("labels.loginWith")}</Title>
       {
         <View style={[flexRow, { width: "60%" }]}>
-          <TouchableOpacity onPress={() => {}} activeOpacity={0.7}>
+          <TouchableOpacity onPress={authenticationGoogleFirebase} activeOpacity={0.7}>
             <Image
               source={Icons.GOOGLE}
               style={{
