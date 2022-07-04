@@ -29,7 +29,9 @@ import {
 } from "./styles";
 import { useEffect } from "react";
 
-export function ListEvents() {
+export function ListEvents({ navigation }) {
+  const [event, setEvent]= useState();
+  
   const [dataEvent, setDataEvent] = useState({
     chatRooms: [],
     loading: true,
@@ -71,6 +73,7 @@ export function ListEvents() {
 
           if(data.eventFeatured){
             dataEvent.featureEvents.push(eventsObject)
+            setEvent(dataEvent.featureEvents.push(eventsObject))
           }
         
         }).catch((error) => {
@@ -105,7 +108,14 @@ export function ListEvents() {
             data={dataEvent?.featureEvents}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity activeOpacity={0.9}>
+                <TouchableOpacity 
+                  activeOpacity={0.9}
+                  onPress={()=> {
+                    navigation.navigate("EventsDetails", {
+                      event: item
+                    })
+                  }}
+                >
                   <ViewCarousel>
                     <ImageBackground
                       borderRadius={20}
