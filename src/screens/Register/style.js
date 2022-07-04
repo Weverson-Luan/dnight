@@ -64,11 +64,13 @@ export const stack = {
 };
 export const stackBirthDate = {
   width: "100%",
-  backgroundColor: "#FFF",
+  backgroundColor: "white",
   marginTop: 10,
   paddingHorizontal: 3,
   paddingVertical: 3,
   borderRadius: 10,
+  borderWidth: 1,
+  borderColor: "#fff"
 };
 export const stackDistance = {
   alignSelf: "stretch",
