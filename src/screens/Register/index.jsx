@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Alert } from "react-native";
 import { FormControl, Stack, Select } from "native-base";
 
 //google-firebase
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //slider react-native-community-slider
 import Slider from "@react-native-community/slider";
@@ -31,6 +34,9 @@ import { PickerImage } from "../../config/SelectImage";
 import { InputError } from "../../components/Input/InputError";
 import { ProfilePicture } from "../../components/ProfilePicture";
 import { PrimaryButton } from "../../components/PrimaryButton";
+
+//utils
+import { HelperFunctions } from "../../utils/HelperFuntions";
 
 //styles-components
 import {
@@ -82,46 +88,90 @@ export function Register({ navigation }) {
   const [selectAvatar, setSelectAvatar] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  console.log("FOTO EM REGISTER", picture)
+  /**
+   * FAZER  UPLOAD DE IMAGE DENTRO DO Google Cloud Storage bucket DO FIREBASE.
+   * @param {*} picture 
+   * @param {*} name 
+   * @param {*} firebasePath 
+   * @returns 
+   */
+  const uploadImage = async (picture, name, firebasePath) => {
+    const imageRef = storage().ref(`${firebasePath}/${name}`)
+    await imageRef.putFile(picture, { contentType: 'image/jpg'}).catch((error) => { AwesomeAlert.show("[ERROR] - " + error)  })
+
+    return await imageRef.getDownloadURL();
+  }
 
  const getUserData = async () => {
-    database().ref('users').push().set({
-      picture: "foto2.png" ,
-      username,
-      email,
-      phone,
-      birthDate,
-      gender,
-      password,
-      eventDistance,
-    }).then((snapshot) => {
-      auth().createUserWithEmailAndPassword(email, password)
-      .then(()=> {
+  const userLocation = await AsyncStorage.getItem("@positionActual");
+      const useLocationTransform  = JSON.parse(userLocation);
+
+  auth().createUserWithEmailAndPassword(email, password).then((userCredential)=> {
+    let filename =  'IMG_' + HelperFunctions('all') + '_DNIGHT_' + Math.floor(Math.random() * (9999 - 1000)) + 1000;
+    const firebasePath = "profilePictures";
+    uploadImage(picture, filename, firebasePath)
+    .then((downloadURL)=> {
+      database().ref(`users/${userCredential.user.uid}`).set({
+        location: {
+          lat: useLocationTransform?.coords.latitude,
+          lng: useLocationTransform?.coords.latitude,
+        },
+        picture: downloadURL,
+        username,
+        email,
+        phone,
+        birthDate,
+        gender,
+        password,
+        eventDistance,
+      }).then((snapshot) => {
         alert("Cadastrado com sucesso !")
         navigation.navigate("Login")
-        console.log("aprovado", snapshot)
+    
       })
-      .catch((error)=> console.error("error auth"))
+      .catch((error)=> {
+        console.error("error register user", error);
+      });
     })
     .catch((error)=> {
-      console.error("error", error);
+      console.error("error upload img", error);
     });
+  })
+  .catch((error)=> console.error("error auth user", error))
     
   };
 
    /**
-    * SELECT AN IMAGE ON USER DEVICE
+    * SELECIONAR UM IMAGE NO DEVICE DO USUÁRIO.
     */
     const selectImage = async () => {
+      var extensionsOfPermitidae = /(.jpg|.jpeg|.png|.gif)$/i;
       if(status.granted === true){
          PickerImage()
          .then((response)=> {
-          setPicture(response)
+          if(!extensionsOfPermitidae.exec(response)){
+               return Alert.alert(
+              "Tipo de Aquivo inválido!",
+              `Apenas imagems com esses tipos de extensão ${extensionsOfPermitidae} são validas.`,
+              [
+                {
+                  text: "Cancel",
+                  onPress: () =>  navigation.navigate("Register"),
+                  style: "cancel"
+                },
+                { text: "OK", onPress: () => navigation.navigate("Register")}
+              ]
+            );
+            }
+            setPicture(response);
          })
          .catch((error)=> {
             console.error("Error selectImage", error)
          });
       };
    };
+
 
  useEffect(()=> {
   requestPermission();
@@ -131,7 +181,13 @@ export function Register({ navigation }) {
     <Screen>
       <ContentImage>
         {
-          picture ?  <ProfilePicture picture={{ uri: picture}}/> :  <ProfilePicture picture={picture} onPress={() => selectImage()} />
+          picture ?  <ProfilePicture picture={{ uri: picture}}  onPress={() =>{
+              setPicture("");
+              selectImage();
+       
+          }}/> 
+          : 
+           <ProfilePicture picture={{uri: picture}}  onPress={() => selectImage()} />
         }
        
         {errors.picture ? (
@@ -184,10 +240,10 @@ export function Register({ navigation }) {
         {errors.birthDate ? <InputError error={errors.birthDate} /> : null}
         <Stack space={4} w="100%" style={stackBirthDate}>
           <Select
+            borderColor={"transparent"}
             variant="unstyled"
-            color={Styles.Color.PLACEHOLDER}
+            color={Styles.Color.GREY_DARK}
             mode="dialog"
-            style={{ width: 120 }}
             placeholder="Gênero*"
             selectedValue={gender}
             onValueChange={gender => setGender(gender)}
@@ -249,7 +305,7 @@ export function Register({ navigation }) {
               thumbTintColor={Styles.Color.PRIMARY_DARK}
             ></Slider>
 
-            <Text style={{ width: 50, color: Styles.Color.PLACEHOLDER }}>
+            <Text style={{ width: 60, color: Styles.Color.PLACEHOLDER }}>
               {/*utilizando interrogação(?) caso  o valor do obejto seja nulo para ele ignorar e seguir o fluxo mesmo se estiver nulo.*/}
               {eventDistance?.toFixed(1)} KM
             </Text>

@@ -11,7 +11,7 @@ import { Profile } from "../screens/Profile";
 export function TabRoutes() {
   const { Navigator, Screen } = createBottomTabNavigator();
   return (
-    <Navigator initialRouteName={Filter} screenOptions={{ headerShown: false }}>
+    <Navigator initialRouteName={'Explorer'} screenOptions={{ headerShown: false }}>
       <Screen
         name="MapLocation"
         component={MapLocation}

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
+
+//google-firebase
+import database from '@react-native-firebase/database';
 
 //icons-vector-icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -27,18 +30,58 @@ import {
 } from "./styles";
 
 export function Filter(){
+  const [filterEvents, setFilterEvents] = useState([]);
+  const [filterEventsOriginal, _] = useState(filterEvents);
+
+  const eventRef = database().ref('events');
+
+  /**
+   * FAZENDO PESQUISA DE EVENTOS.
+   * @param {*} textEvent 
+   */
+  const search = (textEvent) => {
+    if(textEvent){
+      const arrayNew = JSON.parse(JSON.stringify(filterEventsOriginal));
+      const newDate =  arrayNew.filter((event)=> {
+      const itemData = JSON.stringify(event)
+               ? JSON.stringify(event).toLowerCase()
+               : ''.toUpperCase();
+             const textData = textEvent.toLowerCase();
+             return itemData.indexOf(textData) > -1;
+       });
+       setFilterEvents(newDate);
+    };
+  }
+
+  useEffect(()=> {
+    
+  const handleListAllEvents= () => {
+    eventRef.once('value').then((snapshot) => {
+      const data = snapshot.val();
+
+      let array = filterEvents;
+      for (const [_key,value] of Object.entries(data)) {
+        array.push(value)
+        setFilterEvents([...filterEvents,array])
+      };    
+    });
+  };
+
+  handleListAllEvents();
+  },[])
   return(
     <Container>
     <ViewFilter>
       <SearchIcon><Icon name='search' size={28} color={'#a9a9a9'} /></SearchIcon>
       <InputSearch
+         onChangeText={(text)=>search(text)}
        />
     </ViewFilter>
 
     <ContentList>
       <FlatList
         contentContainerStyle={{ paddingBottom: 50 }}
-        data={events}
+        data={filterEvents}
         keyExtractor={item => item.id}
         renderItem={({ item, index }) => {
           return (
@@ -49,20 +92,20 @@ export function Filter(){
               }}
             >
               <View>
-                <Image source={{ uri: item.image }} />
+                <Image source={{ uri: item.eventImage }} />
               </View>
               <Content>
                 <View>
-                  <Title>{item.title}</Title>
+                  <Title>{item.eventName}</Title>
                   <View style={filter}>
                     <Icon name='location-on' size={15} color={Styles.Color.PRIMARY_DARK} />
-                    <SimpleText>{item.local}</SimpleText>
+                    <SimpleText>{item.eventCity}</SimpleText>
                   </View>
                 </View>
                 <View>
                   <View style={filter}>
                     <Icon name='event' size={15} color={Styles.Color.PRIMARY_DARK} />
-                    <SimpleText>{item.date}</SimpleText>
+                    <SimpleText>{item.eventDate}</SimpleText>
                   </View>
                 </View>
               </Content>

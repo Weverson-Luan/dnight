@@ -15,6 +15,8 @@ export const Container = styled.SafeAreaView`
 export const ContentList = styled.View`
  margin-left: 15px;
  margin-right: 15px;
+
+ padding-bottom: 32px;
 `;
 export const ViewFilter = styled.View`
   width: 87%;

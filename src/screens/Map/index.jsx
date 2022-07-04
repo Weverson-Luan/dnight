@@ -1,76 +1,73 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Image } from "react-native";
 
+//maps
 import MapView from "react-native-maps";
-import { Content, Screen, ViewFilter } from "./styles";
 // import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-// import Icon from "react-native-vector-icons/MaterialIcons";
-// import i18n from "../../i18n";
-// import AppState from "../../api/AppState";
-// import AwesomeAlert from "../../utils/AwesomeAlert";
+//google-firebase
+import database from "@react-native-firebase/database";
 
-// const eventRef = database().ref("events");
+//async-storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export function MapLocation() {
+import { Content, Screen, ViewFilter } from "./styles";
+import { View } from "native-base";
 
-  const [userPosition, setUserPosition] = useState({
-    lat: -21.9418874,
-    lng: -42.2710501,
-    markers: [],
+export function MapLocation({ navigation }) {
+  const [userPositionActual, setUserPositionActual] = useState({
+    coords: {
+      accuracy: 0,
+      altitude: 0,
+      altitudeAccuracy: 1,
+      heading: 0,
+      latitude: 0,
+      longitude: 0,
+      speed: 0,
+    },
+    mocked: false,
+    timestamp: 0,
   });
+  const [marked, setMarked] = useState([]);
+  const eventRef = database().ref("events");
 
-  const [ marked, setMarked] = useState({
-    lat: -19.791132623631036,
-    lng: -43.94244426257861, 
-    
-  });
- 
-  //   analytics().logScreenView({
-  //     screen_name: "MapScreen",
-  //   });
-  //   this.listEventsInMarker();
-  // }
+  const listEventsInMarker = () => {
+    eventRef.once("value").then((snapshot) => {
+      const data = snapshot.val();
 
-  // openEventDetails = data => {
-  //   analytics().logEvent("OpenEventDetails", data);
-  //   this.props.navigation.navigate("EVENT_DETAILS_SCREEN", data);
-  // };
+      let array = marked;
+      for (const [_key, value] of Object.entries(data)) {
+        array.push(value);
+        setMarked([...marked, array]);
+      }
+    });
+  };
 
-  // listEventsInMarker = () => {
-  //   eventRef.once("value").then(snapshot => {
-  //     const data = snapshot.val();
+  /**
+   * NAVIGATION PASSED PARAMS
+   */
+  const openEventDetails = (params) => {
+    navigation.navigate("EventsDetails", {
+      event: params,
+    });
+  };
 
-  //     for (i = 0; i < Object.keys(data).length; i++) {
-  //       let value = Object.values(data)[i];
-  //       if (Object.keys(data).length > 0) {
-  //         var dataObject = {
-  //           coordinates: {
-  //             latitude: value.eventLocation.lat,
-  //             longitude: value.eventLocation.lng,
-  //           },
-  //           allData: value,
-  //         };
-  //         var temp = this.state.markers;
-  //         temp.push(dataObject);
+  useEffect(() => {
+    listEventsInMarker();
 
-  //         this.setState({
-  //           markers: temp,
-  //         });
-  //       } else {
-  //         this.setState({
-  //           coordinates: {
-  //             latitude: value.eventLocation.lat,
-  //             longitude: value.eventLocation.lng,
-  //           },
-  //           allData: value,
-  //         });
-  //       }
-  //     }
-  //   });
-  // };
+    /**
+     * SEACRH POSITION
+     */
+    const handlePositionLocationActual = async () => {
+      const keyLocation = "@positionActual";
+      const location = await AsyncStorage.getItem(keyLocation);
+      const transformLocation = JSON.parse(location);
+      setUserPositionActual(transformLocation);
+    };
 
-  // const { userPosition } = this.state;
+    handlePositionLocationActual();
+  }, []);
+
   return (
     <Screen>
       <Content>
@@ -80,76 +77,34 @@ export function MapLocation() {
           showsMyLocationButton={false}
           zoomEnabled={true}
           region={{
-            latitude: -19.794347427358744,
-            longitude: -43.93159329148726,
+            latitude: userPositionActual?.coords?.latitude,
+            longitude: userPositionActual?.coords.longitude,
             latitudeDelta: 0.005922,
             longitudeDelta: 0.00421,
           }}
         >
           {/* FIRST MARKED*/}
-          <MapView.Marker
-            coordinate={{
-              latitude: -19.794347427358744,
-              longitude: -43.93159329148726,
-            }}
-            onPress={() => {}}
-            // this.openEventDetails(marker.allData)
-          >
-            <Image
-              source={require("../../assets/images/map-marker.png")}
-              style={{ width: 36, height: 36 }}
-              resizeMode="contain"
-            />
-          </MapView.Marker>
-         
 
-            {/* TWO MARKED*/ }
-            <MapView.Marker
-            coordinate={{
-              latitude:  -19.795999378439873,
-              longitude: -43.93186074142118
-            }}
-            onPress={() => {}}
-            // this.openEventDetails(marker.allData)
-          >
-            <Image
-              source={require("../../assets/images/map-marker.png")}
-              style={{ width: 36, height: 36 }}
-              resizeMode="contain"
-            />
-          </MapView.Marker>
-
-            {/* TWO TREE*/ }
-            <MapView.Marker
-            coordinate={{
-              latitude:  -19.794737522266256,
-              longitude:  -43.93189292789567
-            }}
-            onPress={() => {}}
-            // this.openEventDetails(marker.allData)
-          >
-            <Image
-              source={require("../../assets/images/map-marker.png")}
-              style={{ width: 36, height: 36 }}
-              resizeMode="contain"
-            />
-          </MapView.Marker>
-
-           {/* TWO FOUR*/ }
-           <MapView.Marker
-            coordinate={{
-              latitude: -19.793859264493562,
-              longitude: -43.93226843713322
-            }}
-            onPress={() => {}}
-            // this.openEventDetails(marker.allData)
-          >
-            <Image
-              source={require("../../assets/images/map-marker.png")}
-              style={{ width: 36, height: 36 }}
-              resizeMode="contain"
-            />
-          </MapView.Marker>
+          {marked.map((events, index) => (
+            <View key={index}>
+              {events?.eventLocation?.lat ? (
+                <MapView.Marker
+                  key={events.eventDate}
+                  coordinate={{
+                    latitude: events?.eventLocation?.lat,
+                    longitude: events?.eventLocation?.lng,
+                  }}
+                  onPress={() => openEventDetails(events)}
+                >
+                  <Image
+                    source={require("../../assets/images/map-marker.png")}
+                    style={{ width: 36, height: 36 }}
+                    resizeMode="contain"
+                  />
+                </MapView.Marker>
+              ) : null}
+            </View>
+          ))}
         </MapView>
         <ViewFilter>{/* add search here*/}</ViewFilter>
       </Content>

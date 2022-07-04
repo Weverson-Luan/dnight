@@ -7,17 +7,24 @@ import database from '@react-native-firebase/database';
 // async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+//expo-location
+import * as Location from 'expo-location'
 
 import i18n from "../../i18n";
+
+
 import { PrimaryButton } from "../../components/PrimaryButton";
 
-// import AwesomeAlert from "../../utils/AwesomeAlert";
+import AwesomeAlert from "../../utils/AwesomeAlert";
 
 
 import { Content, contextButton, placeholderTerm, Screen } from "./styles";
 
 export function Terms({navigation}) {
   const [terms, setTerms] = useState("Carregando...");
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
 
   const getPrivacyTerms = async () => {
     database()
@@ -44,7 +51,7 @@ export function Terms({navigation}) {
 
   useEffect(()=> {
     getPrivacyTerms()
-  })
+  },[])
 
   return (
     <Screen>
