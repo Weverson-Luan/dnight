@@ -45,7 +45,7 @@ export const ProfilePicture = ({ picture, onPress, style }) => (
     style={[styles.pictureContainer, style]}
   >
     {picture.uri ? (
-      <Image source={{ uri: picture.uri }} style={styles.picture} />
+      <Image source={{ uri: picture.uri }} alt="image-profile" style={styles.picture} />
     ) : (
       <View style={{ alignItems: "center" }}>
         <Text style={styles.description}>{i18n.t("buttons.uploadPhoto")}</Text>
