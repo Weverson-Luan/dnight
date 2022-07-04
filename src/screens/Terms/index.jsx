@@ -50,27 +50,6 @@ export function Terms({navigation}) {
   }
 
   useEffect(()=> {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      };
-
-      let location = await Location.getCurrentPositionAsync({});
-      
-      setLocation(location);
-
-      if(errorMsg){
-        return  AwesomeAlert.show("Permissão de localização negada");;
-      }
-      if(location){
-        const keyLocation = "@positionActual";
-        const transformLocation = JSON.stringify(location);
-        await AsyncStorage.setItem(keyLocation, transformLocation);
-      }
-    })();
     getPrivacyTerms()
   },[])
 
