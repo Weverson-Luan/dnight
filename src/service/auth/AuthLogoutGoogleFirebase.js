@@ -11,7 +11,6 @@ export const authLogoutGoogleFirebase = async () => {
     .signOut()
     .then((_userLogout)=> navigation.navigate("Login"))
   } catch (error) {
-    console.log("LOHOH", error)
     AwesomeAlert("Error em sair")
   }
 }
