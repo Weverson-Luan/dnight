@@ -57,6 +57,7 @@
     "react-native-svg": "^12.3.0",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.7",
+    "react-native-webview": "^11.22.4",
     "styled-components": "^5.3.5",
     "styled-system": "^5.1.5",
     "validator": "^13.7.0"
