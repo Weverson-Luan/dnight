@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, Text, View, ImageBackground } from "react-native";
 import Carousel from "react-native-snap-carousel";
 
@@ -6,6 +6,7 @@ import { Heading, Spinner } from "native-base";
 
 //google-firebase
 import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 // icons-vector-icons
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -27,10 +28,9 @@ import {
   imageView,
   ViewCarousel
 } from "./styles";
-import { useEffect } from "react";
 
-export function ListEvents({ navigation }) {
-  const [event, setEvent]= useState();
+export function ListEvents({ navigation ,route}) {
+const {eventType} = route.params
   
   const [dataEvent, setDataEvent] = useState({
     chatRooms: [],
@@ -48,6 +48,22 @@ export function ListEvents({ navigation }) {
     eventDistance: 0,
   });
   const eventsRef = database().ref('events');
+
+ const getDistance = (lat1, lon1, lat2, lon2) => {
+  const deg2rad = deg => {
+      return deg * (Math.PI / 180)
+    }
+    var R = 6371 // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1) // deg2rad below
+    var dLon = deg2rad(lon2 - lon1)
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    var d = R * c // in KM
+
+    return Math.floor(d)
+  }
   useEffect(()=> {
     eventsRef.once('value')
     .then(snapshot => {
@@ -71,10 +87,32 @@ export function ListEvents({ navigation }) {
             eventChild: snapshot.key
           };
 
-          if(data.eventFeatured){
-            dataEvent.featureEvents.push(eventsObject)
-            setEvent(dataEvent.featureEvents.push(eventsObject))
+          if (eventType == data.eventCategory) {
+            if (getDistance(dataEvent.coordinates.lat, dataEvent.coordinates.lng, data.eventLocation.lat, data.eventLocation.lng) >= dataEvent.eventDistance) {
+              
+              if (data.eventFeatured) {
+                let temp = dataEvent.featureEvents
+                temp.push(eventsObject)
+                setDataEvent({
+                  featureEvents: temp,
+                })
+              } else {
+                let temp = this.state.allEvents
+                temp.push(eventsObject)
+
+                setDataEvent({
+                  allEvents: temp,
+                })
+              }
+              let temp = this.state.featureEvents
+              temp.push(eventsObject)
+
+              setDataEvent({
+                featureEvents: temp,
+              })
+            }
           }
+
         
         }).catch((error) => {
           AwesomeAlert.show(error)
@@ -82,6 +120,23 @@ export function ListEvents({ navigation }) {
       }
     })
     .catch((error)=> console.log("error listing events", error))
+  }, [])
+
+  useEffect(()=> {
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        database().ref('users').child(user.uid).on('value', function (snapshot) {
+        let  userData = snapshot.val();
+      setDataEvent({...dataEvent,
+        coordinates: {
+          lat: userData.location.lat,
+          lng: userData.location.lng,
+        },
+        eventDistance:userData.eventDistance
+      })
+        });
+       };
+    });
   }, [])
 
   return (
@@ -93,7 +148,7 @@ export function ListEvents({ navigation }) {
           adjustsFontSizeToFit
           style={{ color: Styles.Color.PRIMARY_DARK, marginBottom: 15, paddingTop: 15 }}
         >
-          {i18n.t("labels.featured_event")}
+          {i18n.t("labels.all_events")}
         </Heading>
         <FeaturedEventContainer>
           {dataEvent?.loadingFeatureEvents && (
