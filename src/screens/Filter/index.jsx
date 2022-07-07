@@ -10,8 +10,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 //styles
 import { Styles } from '../../common/styles';
 
-//mocks
-import { events } from "../../mocks/list-events";
 
 //styled-components
 import { 
@@ -53,18 +51,20 @@ export function Filter(){
     };
   }
 
-  useEffect(()=> {
-    
-  const handleListAllEvents= () => {
-    eventRef.once('value').then((snapshot) => {
-      const data = snapshot.val();
+  /**
+   * BUSCAR POR TODOS EVENTOS
+   */
+  useEffect(()=> { 
+    const handleListAllEvents= () => {
+      eventRef.once('value').then((snapshot) => {
+        const data = snapshot.val();
 
-      let array = filterEvents;
-      for (const [_key,value] of Object.entries(data)) {
-        array.push(value)
-        setFilterEvents([...filterEvents,array])
-      };    
-    });
+        let array = filterEvents;
+        for (const [_key,value] of Object.entries(data)) {
+          array.push(value)
+          setFilterEvents([...filterEvents,array])
+        };    
+      });
   };
 
   handleListAllEvents();

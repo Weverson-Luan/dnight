@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+
+//react-native-base
 import { FormControl, Stack, Input } from "native-base";
+
+//validator
+import validator from "validator";
+
+//icons
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import validator from "validator";
+//spinner
 import Spinner from "react-native-loading-spinner-overlay";
 
+//auth-firebase
 import auth from '@react-native-firebase/auth';
 
-
+//i18n
 import i18n from "../../i18n";
+
+//styles
 import { Styles } from "../../common/styles";
+
+//utils
 import AwesomeAlert from "../../utils/AwesomeAlert";
+
+//components
 import { InputError } from "../../components/Input/InputError";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
@@ -28,22 +42,7 @@ const RecoverPassword = ({navigation}) => {
     // });
   });
 
-  // showInputError = (input, error, callback = null) => {
-  //   this.setState(previousState => ({
-  //     errors: {
-  //       ...previousState.errors,
-  //       [input]: error,
-  //     },
-  //   }));
-
-  //   if (callback) {
-  //     callback();
-  //   }
-  // };
-
   const onSubmit = () => {
-    // analytics().logEvent("clickedRecoverPassword");
-
     if (!email) {
       setErrors({ email: i18n.t("errors.empty.email") });
     } else if (!validator.isEmail(email)) {

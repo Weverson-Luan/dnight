@@ -9,10 +9,6 @@ import { FormControl, Stack, Input } from "native-base";
 //google-firebase
 import auth from '@react-native-firebase/auth';
 import database from '@react-native-firebase/database';
-import storage from '@react-native-firebase/storage';
-
-//expo-location
-import * as Location from 'expo-location'
 
 //async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,10 +35,8 @@ import Icons from "../../common/icons";
 import Constants from "../../common/constants";
 import { Styles } from "../../common/styles";
 
-//utils
-import { HelperFunctions } from "../../utils/HelperFuntions";
-//utils
-import { AwesomeAlert } from "../../utils/AwesomeAlert";
+//services
+import { AuthGoogleFirebase } from "../../service/auth/AuthGoogleFirebase";
 
 //styled-components
 import {
@@ -53,7 +47,7 @@ import {
   stackInput,
   Title,
 } from "./style";
-import { AuthGoogleFirebase } from "../../service/auth/AuthGoogleFirebase";
+
 
 export default function Screen({navigation}) {
   const [email, setEmail] = useState("");
@@ -65,10 +59,8 @@ export default function Screen({navigation}) {
   const [spinner, setSpinner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [start, setStart] = useState("");
-  const [logado, setLogado] = useState({});
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [location, setLocation] = useState(null);
-  const [userPositionActual, setUserPositionActual] = useState({
+  const [_logado, setLogado] = useState({});
+  const [_userPositionActual, setUserPositionActual] = useState({
     coords: {
       accuracy: 0,
       altitude: 0,
@@ -81,9 +73,6 @@ export default function Screen({navigation}) {
     mocked: false,
     timestamp: 0,
   });
-
-  
-  console.log("LOCALIZAÇÃO KKK", userPositionActual?.coords?.latitude)
 
   const onSubmit = () => {
     setSpinner(true)
@@ -137,14 +126,11 @@ const authenticationGoogleFirebase = async () => {
     const { user } = await GoogleSignin.signIn();
     setLogado(user)
 
-
     //verificando se usuário está logado.
     const unsubscribe = auth().onAuthStateChanged((userFirebase) => {
-      console.log("ESTOU LOGADO", userFirebase);
       if (userFirebase) {
         navigation.navigate("Tab", { screen: "Explorer" });
       };
-
     });
     unsubscribe();
 
@@ -180,8 +166,7 @@ const authenticationGoogleFirebase = async () => {
     })  
 
   } catch (error) {
-    alert("oi")
-    console.log("ERROR GOOGLE", error)
+    Alert.alert("Error em cadastratar", "Não foi possivel realizar o cadastro fecha o app e tente novamente.")
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
     } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -195,7 +180,6 @@ const authenticationGoogleFirebase = async () => {
 };
 
 
-
  useEffect(()=> {
   const handleDnightStart = async () => {
     const user = await GoogleSignin.addScopes({
@@ -203,17 +187,12 @@ const authenticationGoogleFirebase = async () => {
     });
    const key = "dnight_start";
    const start = await AsyncStorage.getItem(key);
-   
    setStart(start);
-
    //Pegando localização do usuário
    const userLocation = await AsyncStorage.getItem("@positionActual");
-   setUserPositionActual(userLocation)
-   const useLocationTransform  = JSON.parse(userLocation);
-   console.log("AGORA PEGUEI", useLocationTransform.coords.latitude)
+   setUserPositionActual(userLocation);
   }; 
   handleDnightStart();
-
 
 //verificando se usuário está logado.
   const unsubscribe = auth().onAuthStateChanged(async (userFirebase) => {
@@ -224,8 +203,6 @@ const authenticationGoogleFirebase = async () => {
 
   });
   unsubscribe();
-
-  
 }, []);
  
   return (
