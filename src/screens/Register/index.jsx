@@ -53,8 +53,10 @@ import {
   stackInputMask,
   stackBirthDate,
 } from "./style";
+import { HeaderUpdate } from "../../components/HeaderUpdate";
 
-export function Register({ navigation }) {
+export function Register({ navigation,route }) {
+const {updateMode} = route.params
   const [ username, setUsername ] = useState("");
   const [ email, setEmail ] = useState("");
   const [ phone, setPhone ] = useState("");
@@ -82,13 +84,12 @@ export function Register({ navigation }) {
     username: "",
     phone: "",
     birthDate: "",
+    message: "",
   });
 
   const [picture, setPicture] = useState("");
-  const [selectAvatar, setSelectAvatar] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-  console.log("FOTO EM REGISTER", picture)
   /**
    * FAZER  UPLOAD DE IMAGE DENTRO DO Google Cloud Storage bucket DO FIREBASE.
    * @param {*} picture 
@@ -98,7 +99,7 @@ export function Register({ navigation }) {
    */
   const uploadImage = async (picture, name, firebasePath) => {
     const imageRef = storage().ref(`${firebasePath}/${name}`)
-    await imageRef.putFile(picture, { contentType: 'image/jpg'}).catch((error) => { AwesomeAlert.show("[ERROR] - " + error)  })
+    await imageRef.putFile(picture, { contentType: 'image/jpg'}).catch((error) => { Alert.alert("[ERROR] - " + error)  })
 
     return await imageRef.getDownloadURL();
   }
@@ -140,13 +141,48 @@ export function Register({ navigation }) {
   })
   .catch((error)=> console.error("error auth user", error))
     
-  };
+ };
 
-   /**
-    * SELECIONAR UM IMAGE NO DEVICE DO USUÁRIO.
-    */
-    const selectImage = async () => {
-      var extensionsOfPermitidae = /(.jpg|.jpeg|.png|.gif)$/i;
+const updateUser = async () => {
+    const user_id = await AsyncStorage.getItem(process.env.USER_ID);
+    const position = await  AsyncStorage.getItem(process.env.POSITION_ACTUAL);
+    const position_Transform = JSON.parse(position);
+    
+    try {
+      if(picture){
+        let filename =  'IMG_' + HelperFunctions('all') + '_DNIGHT_' + Math.floor(Math.random() * (9999 - 1000)) + 1000;
+        const firebasePath = "profilePictures";
+        uploadImage(picture, filename, firebasePath)
+        .then((imageUpload)=> {
+          alert("Agora upou")
+          database()
+          .ref(`users/${user_id}`)
+          .update({
+                  location: {
+                      lat: position_Transform.coords.latitude,
+                      lng:  position_Transform.coords.longitude,
+                  },
+                  username,
+                  email,
+                  phone,
+                  birthDate,
+                  gender,
+                  picture: imageUpload,
+                  eventDistance,
+              })
+              .then((resposns)=> {
+                alert("TUDO CERTO EM ATUALIZAR USUÁRIO")
+            })
+        })
+      }
+
+    } catch (error) {
+      console.log("ERROR ATUALIZAR USUÁRIO", error)
+    }   
+};
+
+const selectImage = async () => {
+      let extensionsOfPermitidae = /(.jpg|.jpeg|.png|.gif)$/i;
       if(status.granted === true){
          PickerImage()
          .then((response)=> {
@@ -170,15 +206,36 @@ export function Register({ navigation }) {
             console.error("Error selectImage", error)
          });
       };
-   };
+};
+
+   useEffect(()=> {
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        database().ref('users').child(user.uid).on('value', function (snapshot) {
+        let  userData = snapshot.val();
+        setDataLogin({updateMode})
+        setUsername(userData?.username);
+        setEmail(userData?.email);
+        setPhone(userData?.phone);
+        setBirthDate(userData?.birthDate);
+        setGender(userData?.gender);
+        setPassword(userData?.password);
+        setEventDistance(eventDistance);
+        setPicture(userData?.picture)
+        });
+       };
+    });
+  }, [])
 
 
  useEffect(()=> {
   requestPermission();
- }, [])
+ }, []);
+
 
   return (
     <Screen>
+      <HeaderUpdate />
       <ContentImage>
         {
           picture ?  <ProfilePicture picture={{ uri: picture}}  onPress={() =>{
@@ -316,7 +373,7 @@ export function Register({ navigation }) {
         <ContentForm style={contentForm}>
           <PrimaryButton
             // aqui a validacao do firabase
-            onPress={getUserData}
+            onPress={dataLogin.updateMode ? updateUser : getUserData}
             title={
               dataLogin.updateMode
                 ? i18n.t("buttons.update").toUpperCase()
@@ -333,7 +390,7 @@ export function Register({ navigation }) {
             <View style={{ marginTop: 10 }}>
               <PrimaryButton
                 title={i18n.t("buttons.recoverPassword").toUpperCase()}
-                onPress={() => console.log("hi")}
+                onPress={() => console.log("resete senha")}
                 color={"error"}
                 size={"lg"}
                 variant={"solid"}
