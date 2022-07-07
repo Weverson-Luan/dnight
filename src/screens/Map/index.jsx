@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 
 //maps
 import MapView from "react-native-maps";
-// import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 //google-firebase
 import database from "@react-native-firebase/database";
@@ -12,7 +11,7 @@ import database from "@react-native-firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Content, Screen, ViewFilter } from "./styles";
-import { View } from "native-base";
+
 
 export function MapLocation({ navigation }) {
   const [userPositionActual, setUserPositionActual] = useState({

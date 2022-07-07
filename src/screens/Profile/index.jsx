@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { View, Image } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
+
+import { authLogoutGoogleFirebase } from '../../service/auth/AuthLogoutGoogleFirebase';
 
 //icons-vector-icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -37,33 +39,28 @@ import {
   touchableRippleBorderRadius,
   imageProfile
 } from "./styles";
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { authLogoutGoogleFirebase } from '../../service/auth/AuthLogoutGoogleFirebase';
 
 export function Profile({navigation}){
   const [user, setUser] = useState({});
   const [logout, setLogout] = useState(false);
 
 
-
+  /**
+   * BUSCANDO USUÁRIO LOGADO
+   */
   useEffect(()=> {
     auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log("Estou Logado !",user.uid)
         database().ref('users').child(user.uid).on('value', function (snapshot) {
         let  userData = snapshot.val();
         setUser(userData)
-          console.log("Info Perfil", userData)
         });
        };
     });
-
-    
-  }, [])
+  }, []);
 
   logout && authLogoutGoogleFirebase();
-  !user?.phone && alert("Cadastre um número para receber mais informações")
+  user?.phone === '' || null && alert("Cadastre um número para receber mais informações");
 
   return(
     <Screen>
@@ -73,6 +70,7 @@ export function Profile({navigation}){
             borderless={true} 
             rippleColor="rgba(255, 255, 255, .32)" 
             style={touchableRippleBorderRadius}
+            onPress={()=> navigation.navigate('Register', { updateMode: true })}
             >
             <Icon name={'edit'} size={28}/>
           </TouchableRipple>
@@ -81,7 +79,7 @@ export function Profile({navigation}){
             borderless={true} 
             rippleColor="rgba(255, 255, 255, .32)" 
             style={touchableRippleBorderRadius}
-            onPress={()=> setLogout(!logout)}
+            onPress={()=> setLogout(true)}
             >
             <Icon name={'logout'} size={28}/>
           </TouchableRipple> 
@@ -104,7 +102,7 @@ export function Profile({navigation}){
             <FormTitle>{i18n.t('profile.contact')}</FormTitle>
               <ItemDisabled>
                 <Icon name='phone' size={17} color={Styles.Color.GREY_DARK} />
-                <SimpleText>{user?.phone ? user?.phone : "(00) 0 0000-0000"}</SimpleText>
+                <SimpleText>{user?.phone ? user?.phone : "(00) 00000-0000"}</SimpleText>
               </ItemDisabled>
             <ItemDisabled>
               <Icon name='email' size={17} color={Styles.Color.GREY_DARK} />
@@ -125,7 +123,7 @@ export function Profile({navigation}){
               <SimpleText>{i18n.t('profile.report')}</SimpleText>
             </ItemEnabled>
 
-            <ItemEnabled onPress={() => props.navigation.navigate('TERMS_SCREEN', { login: false})}>
+            <ItemEnabled onPress={() => navigation.navigate('Terms', { login: false})}>
               <Icon name='policy' size={17} color={Styles.Color.GREY_DARK} />
               <SimpleText>{i18n.t('profile.terms')}</SimpleText>
             </ItemEnabled>
