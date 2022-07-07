@@ -7,23 +7,21 @@ import database from '@react-native-firebase/database';
 // async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-//expo-location
-import * as Location from 'expo-location'
-
+//i18n
 import i18n from "../../i18n";
 
-
+//components
 import { PrimaryButton } from "../../components/PrimaryButton";
 
+//utils
 import AwesomeAlert from "../../utils/AwesomeAlert";
 
-
+//styles
 import { Content, contextButton, placeholderTerm, Screen } from "./styles";
 
 export function Terms({navigation}) {
   const [terms, setTerms] = useState("Carregando...");
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [start, setStart] = useState(null);
 
 
   const getPrivacyTerms = async () => {
@@ -50,7 +48,14 @@ export function Terms({navigation}) {
   }
 
   useEffect(()=> {
-    getPrivacyTerms()
+    getPrivacyTerms();
+
+    const handleTerms = async ()=> {
+      const start = await AsyncStorage.getItem("dnight_start");
+      setStart(start)
+    };
+
+    handleTerms();
   },[])
 
   return (
@@ -60,6 +65,22 @@ export function Terms({navigation}) {
       </ScrollView>
 
       <View style={contextButton}>
+        
+        {
+          start ? 
+          <PrimaryButton
+            onPress={() => {
+              appStart()
+              navigation.goBack();
+            }}
+            title={i18n.t("buttons.back").toUpperCase()}
+            color={"error"}
+            size={"full"}
+            variant={"solid"}
+            radius={100}
+            height={45}
+        />
+        :
         <PrimaryButton
           onPress={() => {
             appStart()
@@ -72,8 +93,12 @@ export function Terms({navigation}) {
           radius={100}
           height={45}
         />
+        }
 
-        {/* {route.params.login ? ( */}
+       {
+        !start && 
+        <>
+           {/* {route.params.login ? ( */}
        <View style={{marginTop:20}}>
         <PrimaryButton
           onPress={() => {
@@ -89,6 +114,8 @@ export function Terms({navigation}) {
             />
         {/* ) : null} */}
        </View>
+        </>
+       }  
       </View>
     </Screen>
   );
