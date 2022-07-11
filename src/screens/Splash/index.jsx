@@ -68,6 +68,16 @@ export function Splash() {
 
   const sliderScreen = async () => {
     try {
+ 
+      //verificando se usuário está logado.
+      const unsubscribe = auth().onAuthStateChanged(async (userFirebase) => {
+        await AsyncStorage.setItem(process.env.USER_ID, userFirebase.uid)
+        if (userFirebase) {
+          navigation.navigate("Tab");
+        };
+
+      });
+      unsubscribe();
       const value = await AsyncStorage.getItem("dnight_start");
 
       if (value == null) {
