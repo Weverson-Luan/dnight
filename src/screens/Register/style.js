@@ -9,7 +9,7 @@ export const Screen = styled.SafeAreaView`
 `;
 
 export const Container = styled.ScrollView`
-  padding: 8px;
+
 `;
 
 export const ContentImage = styled.View`
@@ -51,7 +51,7 @@ export const formControl = {
 export const maskInput = {
   paddingLeft: 10,
   color: Styles.Color.PLACEHOLDER,
-  width: "80%",
+  width: "100%",
 };
 export const stack = {
   borderColor: "transparent",
