@@ -8,7 +8,7 @@ export const Header = styled.View`
   align-items: center;
   justify-items: center;
   
-  padding: 20px;
+  padding: 16px;
 
   background-color: #003852;
 
@@ -22,7 +22,7 @@ export const WrapperIcon = styled.TouchableOpacity`
   align-items: center;
   justify-items: center;
 
-  margin-top: 18px;
+  margin-top: 0px;
 `;
 
 
