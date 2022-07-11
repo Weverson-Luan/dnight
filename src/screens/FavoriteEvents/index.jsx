@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 //styles
 import { Styles } from '../../common/styles';
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //styled-components
 import { 
@@ -28,26 +29,56 @@ import {
 export function FavoriteEvents(){
   const [ events, setEvents] = useState([]);
 
+  const [state, setState] =useState( {
+    favoriteList: [],
+  })
+
   /**
    * BUSCAR POR EVENTOS FAVORITOS
    */
 
-  useEffect(()=> {
-    const handleEventSave = async () => {
-      database()
-      .ref(`/favorites`)
+   const handleEventSave = async () => {
+    const user_id = await AsyncStorage.getItem(process.env.USER_ID);
+    console.log("ESSE E O ID DO USUÁRIO DO EVENTO", user_id)
+    database()
+    .ref(`/favorites`)
       .once('value')
-      .then((snapshot)=> {
-        const data = snapshot.val();
-        let array = events;
-        for (const [_key,value] of Object.entries(data)) {
-          array.push(value)
-          setEvents([...events,array])
-        };    
-      })
-      .catch((error)=> console.log("ERROR EM BUSCAR EVENTO SALVO", error))
-    }
+      .then(snapshot => {
+        var id = snapshot.val()
+        for (var i = 0; i < Object.keys(id).length; i++) {
+          database()
+            .ref(`/favorites`)
+            .child(Object.keys(id)[i])
+            .once('value')
+            .then(value => {
+              const response = value.val()
+              var dataObject = {
+                id: value.key,
+                user_id: response.user_id,
+                title: response.eventName,
+                image: response.eventImage,
+                date: response.eventDate
+                  .split('-') 
+                  .reverse() 
+                  .join('/'),
+                local: response.eventCity,
+              }
 
+              var temp = state.favoriteList;
+              temp.push(dataObject)
+              const novaArray = temp.filter(event  => event.user_id === user_id)
+              setState({
+                favoriteList: novaArray,
+              })
+            })
+        }
+      })
+      .catch(error => {
+       // console.error('Error => ', error)
+      })
+  }
+
+  useEffect(()=> {
     handleEventSave();
   }, [])
   return(
@@ -56,8 +87,8 @@ export function FavoriteEvents(){
       <ContentList>
       <FlatList
         contentContainerStyle={{ paddingBottom: 50 }}
-        data={events}
-        keyExtractor={item => item.user_id}
+        data={state.favoriteList}
+        keyExtractor={item => item.id}
         renderItem={({ item, index }) => {
           return (
             <Item
@@ -68,20 +99,20 @@ export function FavoriteEvents(){
               }}
             >
               <View>
-                <Image source={{ uri: item.eventImage }} />
+                <Image source={{ uri: item.image }} />
               </View>
               <Content>
                 <View>
-                  <Title>{item.eventName}</Title>
+                  <Title>{item.title}</Title>
                   <View style={filter}>
                     <Icon name='location-on' size={15} color={Styles.Color.PRIMARY_DARK} />
-                    <SimpleText>{item.eventCity}</SimpleText>
+                    <SimpleText>{item.local}</SimpleText>
                   </View>
                 </View>
                 <View>
                   <View style={filter}>
                     <Icon name='event' size={15} color={Styles.Color.PRIMARY_DARK} />
-                    <SimpleText>{item.eventDate}</SimpleText>
+                    <SimpleText>{item.date}</SimpleText>
                   </View>
                 </View>
               </Content>
