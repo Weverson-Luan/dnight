@@ -39,7 +39,6 @@ export function FavoriteEvents(){
 
    const handleEventSave = async () => {
     const user_id = await AsyncStorage.getItem(process.env.USER_ID);
-    console.log("ESSE E O ID DO USUÁRIO DO EVENTO", user_id)
     database()
     .ref(`/favorites`)
       .once('value')
