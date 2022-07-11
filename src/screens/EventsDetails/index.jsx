@@ -49,6 +49,8 @@ import {
 } from "./styles";
 
 export function EventsDetails({ navigation }){
+  const route = useRoute();
+  const { event } = route.params;
  const [state, setState] = useState({
   latitude: '',
   longitude: '',
@@ -68,10 +70,8 @@ export function EventsDetails({ navigation }){
     mocked: false,
     timestamp: 0,
   });
-  const [ url, setUrl] = useState(false);
-  const route = useRoute();
-  const { event } = route.params;
-  const eventFavorites = [];
+  const [ url, setUrl] = useState("");
+
 
   /**
    * Compartilhamento de Evento
@@ -108,7 +108,7 @@ export function EventsDetails({ navigation }){
           eventPhone: event.eventPhone,
           eventFeatured: event.eventFeatured,
       })
-  .then(() => alert("Eventro Cadastrado"));
+    .then(() => Alert.alert("Eventos", "Evento salvo como favoritos."));
     } catch (error) {
       Alert.alert("Salvar Evento", "Error em salvar evento tente novamente.");
     }
@@ -133,7 +133,7 @@ export function EventsDetails({ navigation }){
     {
       url ?  <WebView
                 source={{
-                  uri: 'https://github.com/facebook/react-native'
+                  uri: event.eventTicket
                 }}
               style={{ marginTop: 20 }}
             /> :
@@ -165,14 +165,19 @@ export function EventsDetails({ navigation }){
           </View>
 
           <View style={contentMain}>
-          <PrimaryButton
-              title={i18n.t("buttons.buyTicket").toUpperCase()}
-              color={"primary"}
-              size={"lg"}
-              radius={8}
-              height={45}
-              onPress={()=> setUrl(!url)}
-            />
+         {
+          event.eventTicket  ?
+            <PrimaryButton
+            title={i18n.t("buttons.buyTicket").toUpperCase()}
+            color={"primary"}
+            size={"lg"}
+            radius={8}
+            height={45}
+            onPress={()=> setUrl(event.eventTicket)}
+          />
+          :
+          null
+         }
           </View>
           
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginHorizontal: 15 }}>
