@@ -124,7 +124,8 @@
       "password": "Informe sua senha",
       "passwordConfirmation": "Confirme sua senha",
       "picture": "Selecione uma foto",
-      "reason": "Informe o motivo da denúncia"
+      "reason": "Informe o motivo da denúncia",
+      "phone": "Informe Nº de telefone"
     },
     "invalid": {
       "username": "",
