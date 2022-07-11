@@ -21,6 +21,12 @@ import * as ImagePicker from 'expo-image-picker';
 //icons
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+//Spinner
+import Spinner from "react-native-loading-spinner-overlay";
+
+//validation
+import validator from "validator";
+
 //commons
 import { Styles } from "../../common/styles";
 
@@ -40,6 +46,7 @@ import { HelperFunctions } from "../../utils/HelperFuntions";
 
 //styles-components
 import {
+  Container,
   Screen,
   formControl,
   ContentImage,
@@ -88,8 +95,10 @@ const {updateMode} = route.params
   });
 
   const [picture, setPicture] = useState("");
+  const [pictureUpdate, setPictureUpdate] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [isLoading, setIsLoading] = useState(false)
   /**
    * FAZER  UPLOAD DE IMAGE DENTRO DO Google Cloud Storage bucket DO FIREBASE.
    * @param {*} picture 
@@ -99,15 +108,36 @@ const {updateMode} = route.params
    */
   const uploadImage = async (picture, name, firebasePath) => {
     const imageRef = storage().ref(`${firebasePath}/${name}`)
-    await imageRef.putFile(picture, { contentType: 'image/jpg'}).catch((error) => { Alert.alert("[ERROR] - " + error)  })
+    if(pictureUpdate){
+      await imageRef.putFile(pictureUpdate, { contentType: 'image/jpg'}).catch((error) => { Alert.alert("[ERROR] - " + error)  })
+    }
 
     return await imageRef.getDownloadURL();
-  }
+  };
 
  const getUserData = async () => {
+  if(username === ""){
+    return setErrors({ username: i18n.t("errors.empty.username") });
+  }
+  if(email === ""){
+    return setErrors({ email: i18n.t("errors.empty.email") });
+  }
+  if(!validator.isEmail(email)){
+    return setErrors({ email: i18n.t("errors.invalid.email") });
+  }
+  if(phone === ""){
+    return setErrors({ phone: i18n.t("errors.empty.phone") });
+  }
+  if(password === ""){
+    return setErrors({ password: i18n.t("errors.empty.password") });
+  }
+  if(picture === ""){
+    return setErrors({ picture: i18n.t("errors.empty.picture") });
+  }
+  setIsLoading(true)
   const userLocation = await AsyncStorage.getItem("@positionActual");
       const useLocationTransform  = JSON.parse(userLocation);
-
+     
   auth().createUserWithEmailAndPassword(email, password).then((userCredential)=> {
     let filename =  'IMG_' + HelperFunctions('all') + '_DNIGHT_' + Math.floor(Math.random() * (9999 - 1000)) + 1000;
     const firebasePath = "profilePictures";
@@ -132,35 +162,41 @@ const {updateMode} = route.params
     
       })
       .catch((error)=> {
+        setIsLoading(false)
         console.error("error register user", error);
       });
     })
     .catch((error)=> {
+      setIsLoading(false)
       console.error("error upload img", error);
     });
   })
-  .catch((error)=> console.error("error auth user", error))
+  .catch((error)=> {
+    Alert.alert("Error cadastrar usuário", "Email de usuário ja esta cadastrado.")
+    return setIsLoading(false) 
+})
+.finally(()=>setIsLoading(false))
     
  };
 
 const updateUser = async () => {
+  setIsLoading(true)
     const user_id = await AsyncStorage.getItem(process.env.USER_ID);
     const position = await  AsyncStorage.getItem(process.env.POSITION_ACTUAL);
     const position_Transform = JSON.parse(position);
     
     try {
-      if(picture){
+      if(pictureUpdate){
         let filename =  'IMG_' + HelperFunctions('all') + '_DNIGHT_' + Math.floor(Math.random() * (9999 - 1000)) + 1000;
         const firebasePath = "profilePictures";
         uploadImage(picture, filename, firebasePath)
         .then((imageUpload)=> {
-          alert("Agora upou")
           database()
           .ref(`users/${user_id}`)
           .update({
                   location: {
-                      lat: position_Transform.coords.latitude,
-                      lng:  position_Transform.coords.longitude,
+                    lat: position_Transform.coords.latitude,
+                    lng:  position_Transform.coords.longitude,
                   },
                   username,
                   email,
@@ -170,9 +206,35 @@ const updateUser = async () => {
                   picture: imageUpload,
                   eventDistance,
               })
-              .then((resposns)=> {
-                alert("TUDO CERTO EM ATUALIZAR USUÁRIO")
+              .then((_response)=> {
+                setIsLoading(false);
+                Alert.alert("Dados atualizado", "Seus dados foram atualizado com sucesso.");
             })
+        })
+      };
+
+      if(!pictureUpdate){
+        database()
+        .ref(`users/${user_id}`)
+        .update({
+                location: {
+                  lat: position_Transform.coords.latitude,
+                  lng:  position_Transform.coords.longitude,
+                },
+                username,
+                email,
+                phone,
+                birthDate,
+                gender,
+                picture: picture,
+                eventDistance,
+            })
+            .then((_responseUserUpdate)=> {
+              setIsLoading(false)
+              Alert.alert("Dados atualizado", "Seus dados foram atualizado com sucesso.");
+        })
+        .catch((error)=> {
+          Alert.alert("Dados atualizado", "Houve algum problema para atualizar suas informações feche o app e tente novamente.");
         })
       }
 
@@ -186,6 +248,7 @@ const selectImage = async () => {
       if(status.granted === true){
          PickerImage()
          .then((response)=> {
+          setPictureUpdate(response);
           if(!extensionsOfPermitidae.exec(response)){
                return Alert.alert(
               "Tipo de Aquivo inválido!",
@@ -193,10 +256,14 @@ const selectImage = async () => {
               [
                 {
                   text: "Cancel",
-                  onPress: () =>  navigation.navigate("Register"),
+                  onPress: () =>  navigation.navigate("Register", {
+                    updateMode: updateMode
+                  }),
                   style: "cancel"
                 },
-                { text: "OK", onPress: () => navigation.navigate("Register")}
+                { text: "OK", onPress: () => navigation.navigate("Register", {
+                  updateMode: updateMode
+                })}
               ]
             );
             }
@@ -234,173 +301,189 @@ const selectImage = async () => {
 
 
   return (
-    <Screen>
-      <HeaderUpdate />
-      <ContentImage>
+    <Container>
+      <Screen>
         {
-          picture ?  <ProfilePicture picture={{ uri: picture}}  onPress={() =>{
-              setPicture("");
-              selectImage();
-       
-          }}/> 
-          : 
-           <ProfilePicture picture={{uri: picture}}  onPress={() => selectImage()} />
+          isLoading && <Spinner visible={true} />
         }
-       
-        {errors.picture ? (
-          <InputError style={inputError} error={errors.picture} />
-        ) : null}
-      </ContentImage>
+        {
+          updateMode &&  <HeaderUpdate />
+        }
+        <ContentImage>
+          {
+            picture ?  <ProfilePicture picture={{ uri: picture}}  onPress={() =>{
+                setPicture("");
+                selectImage();
+        
+            }}/> 
+            : 
+            <ProfilePicture picture={{uri: picture}}  onPress={() => selectImage()} />
+          }
+        
+          {errors.picture ? (
+            <InputError style={inputError} error={errors.picture} />
+          ) : null}
+        </ContentImage>
 
-      <FormControl style={formControl}>
-        <Stack space={4} w="100%" style={stackInputMask}>
-          <Icon name="account" size={24} color={Styles.Color.PLACEHOLDER} />
-          <MaskInput
-            value={username}
-            onChangeText={username => setUsername(username)}
-            style={maskInput}
-            placeholder={`${i18n.t("placeholders.name")}*`}
-          />
-        </Stack>
-        {errors.username ? <InputError error={errors.username} /> : null}
+        <FormControl style={formControl}>
+          <Stack space={4} w="100%" style={stackInputMask}>
+            <Icon name="account" size={24} color={Styles.Color.PLACEHOLDER} />
+            <MaskInput
+              value={username}
+              onChangeText={username => setUsername(username)}
+              style={maskInput}
+              placeholder={`${i18n.t("placeholders.name")}*`}
+            />
+          </Stack>
+          {errors.username ? <InputError error={errors.username} /> : null}
 
-        <Stack space={4} w="100%" style={stackInputMask}>
-          <Icon name="email" size={24} color={Styles.Color.PLACEHOLDER} />
-          <MaskInput
-            value={email}
-            onChangeText={email => setEmail(email)}
-            style={maskInput}
-            placeholder={`${i18n.t("placeholders.email")}*`}
-          />
-        </Stack>
-        {errors.email ? <InputError error={errors.email} /> : null}
+          <Stack space={4} w="100%" style={stackInputMask}>
+            <Icon name="email" size={24} color={Styles.Color.PLACEHOLDER} />
+            <MaskInput
+              value={email}
+              onChangeText={email => setEmail(email)}
+              style={maskInput}
+              placeholder={`${i18n.t("placeholders.email")}*`}
+            />
+          </Stack>
+          {errors.email ? <InputError error={errors.email} /> : null}
 
-        <Stack space={4} w="100%" style={stackInputMask}>
-          <Icon name="phone" size={24} color={Styles.Color.PLACEHOLDER} />
-          <MaskInput
-            value={phone}
-            mask={Masks.BRL_PHONE}
-            onChangeText={unmasked => setPhone(unmasked)}
-            style={maskInput}
-          />
-        </Stack>
-        {errors.phone ? <InputError error={errors.phone} /> : null}
-        <Stack space={4} w="100%" style={stackInputMask}>
-          <Icon name="calendar" size={24} color={Styles.Color.PLACEHOLDER} />
-          <MaskInput
-            value={birthDate}
-            mask={Masks.DATE_DDMMYYYY}
-            onChangeText={unmasked => setBirthDate(unmasked)}
-            style={maskInput}
-          />
-        </Stack>
-        {errors.birthDate ? <InputError error={errors.birthDate} /> : null}
-        <Stack space={4} w="100%" style={stackBirthDate}>
-          <Select
-            borderColor={"transparent"}
-            variant="unstyled"
-            color={Styles.Color.GREY_DARK}
-            mode="dialog"
-            placeholder="Gênero*"
-            selectedValue={gender}
-            onValueChange={gender => setGender(gender)}
-            InputLeftElement={
+          <Stack space={4} w="100%" style={stackInputMask}>
+            <Icon name="phone" size={24} color={Styles.Color.PLACEHOLDER} />
+            <MaskInput
+              value={phone}
+              mask={Masks.BRL_PHONE}
+              onChangeText={unmasked => setPhone(unmasked)}
+              style={maskInput}
+            />
+          </Stack>
+          {errors.phone ? <InputError error={errors.phone} /> : null}
+          <Stack space={4} w="100%" style={stackInputMask}>
+            <Icon name="calendar" size={24} color={Styles.Color.PLACEHOLDER} />
+            <MaskInput
+              value={birthDate}
+              mask={Masks.DATE_DDMMYYYY}
+              onChangeText={unmasked => setBirthDate(unmasked)}
+              style={maskInput}
+            />
+          </Stack>
+          {errors.birthDate ? <InputError error={errors.birthDate} /> : null}
+          <Stack space={4} w="100%" style={stackBirthDate}>
+            <Select
+              borderColor={"transparent"}
+              variant="unstyled"
+              color={Styles.Color.GREY_DARK}
+              mode="dialog"
+              placeholder="Gênero*"
+              selectedValue={gender}
+              onValueChange={gender => setGender(gender)}
+              InputLeftElement={
+                <Icon
+                  name="gender-male-female"
+                  size={24}
+                  color={Styles.Color.PLACEHOLDER}
+                />
+              }
+            >
+              <Select.Item label="Feminino" value="F" />
+              <Select.Item label="Masculino" value="M" />
+              <Select.Item label="Outro" value="O" />
+              <Select.Item label="Indefinido" value="U" />
+            </Select>
+          </Stack>
+          {errors.gender ? <InputError error={errors.gender} /> : null}
+          {!dataLogin.updateMode ? (
+            <Stack space={4} w="100%" style={stackInputMask}>
+              <Icon name="lock" size={24} color={Styles.Color.PLACEHOLDER} />
+              <MaskInput
+                value={password}
+                onChangeText={password => setPassword(password)}
+                secureTextEntry={!showPassword}
+                style={maskInput}
+                placeholder={`${i18n.t("placeholders.password")}*`}
+              />
               <Icon
-                name="gender-male-female"
+                name={showPassword ? "eye-off-outline" : "eye-outline"}
+                type="MaterialCommunityIcons"
+                size={24}
+                style={{ color: Styles.Color.PLACEHOLDER, marginLeft: "auto" }}
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            </Stack>
+          ) : null}
+          {errors.password ? <InputError error={errors.password} /> : null}
+          <Stack space={4} w="100%" style={stack}>
+            <Stack space={4} w="100%" u style={stackDistance}>
+              <Text style={{ color: Styles.Color.PLACEHOLDER }}>
+                Distância de eventos
+              </Text>
+            </Stack>
+            <Stack space={4} w="100%" style={stackDistanceFlexRow}>
+              <Icon
+                name="google-maps"
                 size={24}
                 color={Styles.Color.PLACEHOLDER}
               />
-            }
-          >
-            <Select.Item label="Feminino" value="F" />
-            <Select.Item label="Masculino" value="M" />
-            <Select.Item label="Outro" value="O" />
-            <Select.Item label="Indefinido" value="U" />
-          </Select>
-        </Stack>
-        {errors.gender ? <InputError error={errors.gender} /> : null}
-        {!dataLogin.updateMode ? (
-          <Stack space={4} w="100%" style={stackInputMask}>
-            <Icon name="lock" size={24} color={Styles.Color.PLACEHOLDER} />
-            <MaskInput
-              value={password}
-              onChangeText={password => setPassword(password)}
-              secureTextEntry={!showPassword}
-              style={maskInput}
-              placeholder={`${i18n.t("placeholders.password")}*`}
-            />
-            <Icon
-              name={showPassword ? "eye-off-outline" : "eye-outline"}
-              type="MaterialCommunityIcons"
-              size={24}
-              style={{ color: Styles.Color.PLACEHOLDER, marginLeft: "auto" }}
-              onPress={() => setShowPassword(!showPassword)}
-            />
-          </Stack>
-        ) : null}
-        {errors.password ? <InputError error={errors.password} /> : null}
-        <Stack space={4} w="100%" style={stack}>
-          <Stack space={4} w="100%" u style={stackDistance}>
-            <Text style={{ color: Styles.Color.PLACEHOLDER }}>
-              Distância de eventos
-            </Text>
-          </Stack>
-          <Stack space={4} w="100%" style={stackDistanceFlexRow}>
-            <Icon
-              name="google-maps"
-              size={24}
-              color={Styles.Color.PLACEHOLDER}
-            />
-            <Slider
-              style={{ flex: 1, height: 50 }}
-              value={eventDistance}
-              onValueChange={eventDistance => setEventDistance(eventDistance)}
-              minimumValue={0}
-              maximumValue={50}
-              minimumTrackTintColor={Styles.Color.PRIMARY}
-              maximumTrackTintColor={Styles.Color.PRIMARY_DARK}
-              thumbTintColor={Styles.Color.PRIMARY_DARK}
-            ></Slider>
+              <Slider
+                style={{ flex: 1, height: 50 }}
+                value={eventDistance}
+                onValueChange={eventDistance => setEventDistance( Math.floor(eventDistance))}
+                minimumValue={0}
+                maximumValue={100}
+                minimumTrackTintColor={Styles.Color.PRIMARY}
+                maximumTrackTintColor={Styles.Color.PRIMARY_DARK}
+                thumbTintColor={Styles.Color.PRIMARY_DARK}
+              ></Slider>
 
-            <Text style={{ width: 60, color: Styles.Color.PLACEHOLDER }}>
-              {/*utilizando interrogação(?) caso  o valor do obejto seja nulo para ele ignorar e seguir o fluxo mesmo se estiver nulo.*/}
-              {eventDistance?.toFixed(1)} KM
-            </Text>
+              <Text style={{ width: 60, color: Styles.Color.PLACEHOLDER }}>
+                {/*utilizando interrogação(?) caso  o valor do obejto seja nulo para ele ignorar e seguir o fluxo mesmo se estiver nulo.*/}
+                {eventDistance?.toFixed(0)} KM
+              </Text>
+            </Stack>
           </Stack>
-        </Stack>
 
-        <InputError error={errors.password} />
-        <ContentForm style={contentForm}>
-          <PrimaryButton
-            // aqui a validacao do firabase
-            onPress={dataLogin.updateMode ? updateUser : getUserData}
-            title={
-              dataLogin.updateMode
-                ? i18n.t("buttons.update").toUpperCase()
-                : i18n.t("buttons.signUp").toUpperCase()
-            }
-            color={"error"}
-            size={"lg"}
-            variant={"solid"}
-            radius={100}
-            height={45}
-          />
-
-          {dataLogin.updateMode ? (
-            <View style={{ marginTop: 10 }}>
+          <ContentForm style={contentForm}>
+            {
+              updateMode ? 
               <PrimaryButton
-                title={i18n.t("buttons.recoverPassword").toUpperCase()}
-                onPress={() => console.log("resete senha")}
-                color={"error"}
-                size={"lg"}
-                variant={"solid"}
-                radius={100}
-                height={45}
-              />
-            </View>
-          ) : null}
-        </ContentForm>
-      </FormControl>
-    </Screen>
+              // aqui a validacao do firabase
+              onPress={updateUser}
+              title={i18n.t("buttons.update").toUpperCase()}
+              color={"error"}
+              size={"lg"}
+              variant={"solid"}
+              radius={100}
+              height={45}
+            />
+              :
+              <PrimaryButton
+              // aqui a validacao do firabase
+              onPress={getUserData}
+              title={i18n.t("buttons.signUp").toUpperCase()}
+              color={"error"}
+              size={"lg"}
+              variant={"solid"}
+              radius={100}
+              height={45}
+            />
+            }
+
+            {dataLogin.updateMode ? (
+              <View style={{ marginTop: 10 }}>
+                <PrimaryButton
+                  title={i18n.t("buttons.recoverPassword").toUpperCase()}
+                  onPress={() => console.log("resete senha")}
+                  color={"error"}
+                  size={"lg"}
+                  variant={"solid"}
+                  radius={100}
+                  height={45}
+                />
+              </View>
+            ) : null}
+          </ContentForm>
+        </FormControl>
+      </Screen>
+    </Container>
   );
 }
