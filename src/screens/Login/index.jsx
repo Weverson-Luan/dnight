@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View, Image, Alert } from "react-native";
+import { TouchableOpacity, View, Image, Alert, ActivityIndicator, Text } from "react-native";
 
 import { GoogleSignin, statusCodes,} from '@react-native-google-signin/google-signin';
 
@@ -29,6 +29,7 @@ import i18n from "../../i18n";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { InputError } from "../../components/Input/InputError";
 import { Logo } from "../../components/Logo/Logo";
+import { Button } from "../../components/Button";
 
 //commons
 import Icons from "../../common/icons";
@@ -78,46 +79,55 @@ export default function Screen({navigation}) {
     setSpinner(true)
     if (email === "") {
       setErrors({ email: i18n.t("errors.empty.email") });
+      setSpinner(false)
     } else if (!validator.isEmail(email)) {
       setErrors({ email: i18n.t("errors.invalid.email") });
+      setSpinner(false)
     } else if (!password) {
+      setSpinner(false)
       setErrors({ password: i18n.t("errors.empty.password") });
     } else if (password.length < Constants.PASSWORD_MIN_LENGTH) {
+      setSpinner(false)
       setErrors({ password: i18n.t("errors.invalid.smallPassword") });
+      setSpinner(false)
     } else {
-    
+      
       auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
-        setSpinner(true)
-        console.log('User account created & signed in!');
+      .then(async(responseUserAth) => {
+        await AsyncStorage.setItem(process.env.USER_ID, responseUserAth.user.uid)
+        setSpinner(false);
+        setEmail("");
+        setPassword("");
         if(start){
-          return navigation.navigate("Tab")
+          return navigation.navigate("Tab");
         }
         else{
-          return navigation.navigate("Terms")
+          return navigation.navigate("Terms");
         }
       })
       .catch(error => {
         Alert.alert(
           "Usuário não Cadastrado",
-          "Cadastre-se",
+          "Senha ou email invalidos!",
           [
             {
               text: "Cancel",
               onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
-            { text: "OK", onPress: () => navigation.navigate("Register")}
+            { text: "OK", onPress: () => navigation.navigate("Register", {
+               updateMode: false 
+            })}
           ]
         );
        
       })
-      .finally(()=> setSpinner(false))
+      .finally(()=> setSpinner(false)) 
     }
   };
 // Somewhere in your code
 const authenticationGoogleFirebase = async () => {
-
+  // setSpinner(true)
   try {
     // configuration of firebase  
     AuthGoogleFirebase();
@@ -125,18 +135,21 @@ const authenticationGoogleFirebase = async () => {
     await GoogleSignin.hasPlayServices();
     const { user } = await GoogleSignin.signIn();
     setLogado(user)
-
+ 
     //verificando se usuário está logado.
-    const unsubscribe = auth().onAuthStateChanged((userFirebase) => {
+    const unsubscribe = auth().onAuthStateChanged( async (userFirebase) => {
       if (userFirebase) {
+        await AsyncStorage.setItem(process.env.USER_ID, userFirebase.uid)
         navigation.navigate("Tab", { screen: "Explorer" });
       };
     });
     unsubscribe();
 
-    //criação para autenticação do google-firebase
+          //criação para autenticação do google-firebase
     auth().createUserWithEmailAndPassword(user.email, user.id).then(async(userCredential)=> {
-
+      await AsyncStorage.setItem(process.env.USER_ID,userCredential.user.uid)
+      setEmail("");
+      setPassword("");
       //Pegando localização do usuário
       const userLocation = await AsyncStorage.getItem("@positionActual");
       setUserPositionActual(userLocation)
@@ -156,14 +169,18 @@ const authenticationGoogleFirebase = async () => {
           password: user.id,
           eventDistance: '',
         }).then((snapshot) => {
-          alert("Cadastrado com sucesso !")
+          Alert.alert("Usuário", "Usuário foi cadastrado com sucesso .")
           navigation.navigate("Terms");
       });
     })
     .catch((error)=>{
       auth().signInWithEmailAndPassword(user.email, user.id)
-      .then((res)=> start ? navigation.navigate("Tab") : navigation.navigate("Terms"))
-    })  
+      .then(async(res)=> {
+         await AsyncStorage.setItem(process.env.USER_ID, res.user.uid)
+        start ? navigation.navigate("Tab") : navigation.navigate("Terms")
+      })
+    })
+    .finally(()=> setSpinner(false)); 
 
   } catch (error) {
     Alert.alert("Error em cadastratar", "Não foi possivel realizar o cadastro fecha o app e tente novamente.")
@@ -210,9 +227,7 @@ const authenticationGoogleFirebase = async () => {
       <Header>
         <Logo />
       </Header>
-
-      <Spinner visible={spinner} />
-
+      
       <FormControl style={formControl}>
         <Stack style={stackInput}>
           <Input
@@ -277,16 +292,18 @@ const authenticationGoogleFirebase = async () => {
 
         <InputError error={errors.password} />
 
-        <PrimaryButton
-          title={i18n.t("buttons.login").toUpperCase()}
-          color={"primary"}
-          size={"lg"}
-          radius={20}
-          height={45}
-          onPress={()=> onSubmit()}
-        />
-
-
+        <Button
+          disabled={spinner}
+          onPress={()=>{
+            setSpinner(true)
+            onSubmit()
+          }}  
+        >
+          {
+            spinner ? <ActivityIndicator size={24} color={Styles.Color.SCREEN_BACKGROUND}/> :  <Title>{i18n.t("buttons.login").toUpperCase()}</Title>
+          }
+    
+        </Button>
         <View style={flexRow}>
           <TouchableOpacity
             onPress={() => {
