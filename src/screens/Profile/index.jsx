@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Alert } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { authLogoutGoogleFirebase } from '../../service/auth/AuthLogoutGoogleFirebase';
+import { authLogoutApp } from '../../service/auth/AuthLogoutGoogleFirebase';
+
+//async-storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //icons-vector-icons
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -40,11 +43,23 @@ import {
   imageProfile
 } from "./styles";
 
+
 export function Profile({navigation}){
   const [user, setUser] = useState({});
   const [logout, setLogout] = useState(false);
 
-
+   const AuthLogout = async () => {
+    try {
+      AsyncStorage.removeItem(process.env.USER_ID);
+      auth()
+      .signOut()
+      .then((_userLogout)=>{
+        navigation.navigate("Login")
+      })
+    } catch (error) {
+      alert("Error em sair")
+    }
+  }
   /**
    * BUSCANDO USUÁRIO LOGADO
    */
@@ -53,15 +68,20 @@ export function Profile({navigation}){
       if (user) {
         database().ref('users').child(user.uid).on('value', function (snapshot) {
         let  userData = snapshot.val();
+    
         setUser(userData)
         });
+        
        };
     });
+   
   }, []);
 
-  logout && authLogoutGoogleFirebase();
-  user?.phone === '' || null && alert("Cadastre um número para receber mais informações");
-
+  if(!logout === false){
+    logout === true && authLogoutApp();
+  }
+  user?.phone === undefined || "" && Alert.alert("Informações", "Informe um número de telefone para receber mais informações.")
+  
   return(
     <Screen>
       <Container>
@@ -79,7 +99,7 @@ export function Profile({navigation}){
             borderless={true} 
             rippleColor="rgba(255, 255, 255, .32)" 
             style={touchableRippleBorderRadius}
-            onPress={()=> setLogout(true)}
+            onPress={()=> AuthLogout()}
             >
             <Icon name={'logout'} size={28}/>
           </TouchableRipple> 
@@ -102,7 +122,7 @@ export function Profile({navigation}){
             <FormTitle>{i18n.t('profile.contact')}</FormTitle>
               <ItemDisabled>
                 <Icon name='phone' size={17} color={Styles.Color.GREY_DARK} />
-                <SimpleText>{user?.phone ? user?.phone : "(00) 00000-0000"}</SimpleText>
+                <SimpleText>{user?.phone ? user?.phone : "(00) 0000-0000"}</SimpleText>
               </ItemDisabled>
             <ItemDisabled>
               <Icon name='email' size={17} color={Styles.Color.GREY_DARK} />
