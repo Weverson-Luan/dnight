@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { FormControl, Stack, } from 'native-base';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput, Alert } from 'react-native';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import styled from 'styled-components';
 
@@ -9,6 +9,9 @@ import styled from 'styled-components';
 import database from '@react-native-firebase/database';
 //async-storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+//Spinner
+import Spinner from "react-native-loading-spinner-overlay";
 
 import { Styles } from '../../common/styles'
 import i18n from '../../i18n'
@@ -21,34 +24,55 @@ const Content = styled.ScrollView`
 `
 export function Report(){
   const navigation = useNavigation();
-const [report, setReport] = useState("");
+  const [ report, setReport ] = useState("");
+  const [ isLoading, setIsLoading ] = useState(false)
+
+
 
 const sendRequest = async () => {
 
   const userUuid = await AsyncStorage.getItem(process.env.USER_ID);
 
   if (Object.values(report).length > 5) {
+
     try {
+      setIsLoading(false)
       database().ref('report').push({
         uid: userUuid ? userUuid : null,
         create_at: database().getServerTime().getTime(),
         message: report
     },
-    alert("Sua denuncia foi registrada")
-    );
+    )
+    Alert.alert("Reporter","Sua denuncia foi registrada com sucesso.")
     setReport("")
     navigation.goBack();
-    } catch (error) {
-      alert("Sua denuncia não foi registrada")
-      console.log("errpr")
+    }
+    catch(err) {
+      Alert.alert("Sua denuncia não foi registrada")
+      console.log("ERROR DENUCIA", err)
+    }
+    finally {
+      setIsLoading(false)
     }
   } else {
-    alert("Seu texto está muito pequeno.")
+    Alert.alert("Seu texto está muito pequeno.");
+    setIsLoading(false)
   };
 
-}
+};
   return(
+    
     <Screen>
+
+      {
+        isLoading &&  <Spinner
+        visible={true}
+            color="white"
+            size={50}
+            
+        /> 
+      }
+      
       <Content>
           <FormControl>
               <Stack last
@@ -77,6 +101,7 @@ const sendRequest = async () => {
               <Stack last
                   style={{ marginHorizontal: 15, marginTop: '20%', borderColor: 'transparent' }}>
                   <PrimaryButton onPress={() => {
+                      setIsLoading(true)
                       sendRequest()
                   }} title={i18n.t('buttons.sendReport').toUpperCase()}
                       color={'error'}
